@@ -1,0 +1,116 @@
+# Game Developer Asset Inventory
+The purpose of this browser extension is to enable game developers to take inventory of all of the game assets that they have purchased without even downloading them. The developers can then view and filter their lists, and download the data to view in other software.
+
+This browser extension scrapes your game development asset orders from popular sites. It stores the data in your browser's database for you to view. You have options of exporting the data to local files such as CSV and JSON. No data is collected/exported to an outside server. This is YOUR data, and this browser extension helps you view your items from all the popular stores that your ordered from. You will need to login to these sites in order for the extension to scrape the order listings.
+
+This extension DOES NOT download the assets. It only gets basic information: **title, URL, image URL, order ID (if available), purchase date (if available), and store name**. That's it. When it does use store APIs (GraphQL), it is more narrow in scope (limited product data) than what is queried on their own websites.
+
+I realize that people will have concerns about a browser extension that gets the data from their order history. The extension is provided here to be transparent and show what exactly the code does. It uses plain JavaScript without transpiling, minification, nor obfuscation so that it is easy to inspect and debug.
+
+## Note to Official Asset Store Personell
+This browser extension provides a service for the user, your users. I do not collect any information from them. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
+
+
+## Preferred Installation through Browser Extension Listings
+The preferred way for you to install this is through the browser extension sites:
+- [Firefox Addon](https://addons.mozilla.org/en-US/firefox/extensions/)
+- Chrome
+- Edge
+
+The Safari browser will not get an extension from their App Store since it requires conversion to Swift code. However, through the Safari browser developer options, you can <a href="https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension#Temporarily-install-a-web-extension-folder-in-macOS-Safari">install it manually and temporarily</a>.
+
+### Note: test and submit the extension to these sites and fill in the links above.
+
+
+## Developer Intallation
+You can install this extension temporarily and include any modifications you make to it locally. However, it may not last. It could be removed when your browser session ends (closed).
+In the src directory, use the manifest.json file.
+- [Firefox install video on YouTube](https://youtu.be/dhaGRJvJAII?si=z4nBw8WIzdAorbD9&t=97)
+    - Type `about:debugging#/runtime/this-firefox` into the address bar and press Enter.
+    - Click the Load Temporary Add-on... button.
+    - Navigate to your extension's folder and select the manifest.json file (or any file within the folder for unpacked extensions).
+    - This installs the extension temporarily until Firefox restarts.
+    - Notice the Inspect button, which you can click to open Developer Tools to view any console messages.
+- [Chrome install video on YouTube](https://youtu.be/dhaGRJvJAII?si=IRs_BkdTNUsapC64&t=53)
+- Edge
+
+
+## Supported Game Asset Stores
+
+These are the game developer asset sites for which you can import your order/asset data from:
+- [3D Shards](https://3dshards.com)
+- [CGTrader](https://www.cgtrader.com)
+- [Daz3D](https://www.daz3d.com)
+- [Fab Unreal](https://www.fab.com)
+- [Fab Quixel Megascans](https://www.fab.com/sellers/Quixel%20Megascans)
+- [Gumroad](https://gumroad.com)
+- [KitBash3d](https://cargo-app.kitbash3d.com)
+- [Leartes Studios](https://cosmos.leartesstudios.com)
+- [Ovani Sound](https://ovanisound.com)
+- [RenderHub](https://www.renderhub.com)
+- [Blender Superhive](https://superhivemarket.com)
+- [Synty](https://syntystore.com)
+- [TurboSquid](https://www.turbosquid.com)
+- [Unity](https://assetstore.unity.com)
+
+If there is another game asset store that you would like supported, let me know.
+
+
+## Using the Extension (Add-On)
+
+In your browser toolbar, pin the extension so you'll have easy access to it. Click on the icon and you'll see a small pop-up window.
+
+To start with, it may tell you "Can't get inventory from this page. Try a different page." Click the dropdown list and select a store. It will redirect your browser tab to the correct page that it can access the asset library. The website may redirect you to the login page. After you login, you may need to select from the dropdown again to get to the correct page.
+![dropdown to select a page](screenshots/select_page.png)
+
+When you are on a valid page that it can access the asset store, close and open the popup again so it will refresh. You will see a button labeled "Start Gathering Inventory". Click it it and it will start running.
+![button to start gathering inventory](screenshots/popup_default.png)
+
+It may take a little while to get running, depending on the site. The progress bar will give you an indication of how long it will take till it completes. If after a long while it does not even start, click the Reset button and refresh the web page. Close and open the extension popup, and click the "Start Gathering Inventory" button again. If it does not work, then there might be an error. You can submit an issue through this Github page. When this is complete, and you want to go to a different page, click the Reset button and the page selector dropdown will display again.
+![running and progress indicator](screenshots/running.png)
+
+If you click somewhere else while it is still gathering, the popup may close. When you re-open it, the progress indicator may not appear yet. Give it a few seconds and it should re-appear.
+
+**Note:** I'm limited by what I can view and research in the asset stores that I have. If I don't have enough purchased items / orders, then pagination links may not appear for me to inspect in the DevTools and find the proper HTML DOM query needed to parse additional pages. Some stores like Fab use infinite scrolling instead of pagination, and that uses additional API requests. Maybe you have more orders for such stores and this extension doesn't parse the extra pages. If so, you can fill out an issue on this Github repository and let me know. Any details that you can provide will be helpful. If you can go into DevTools and find the pagination links or additional API network requests, that will help me fix the issue faster (though it will require your additional help with testing). The Github issue page allows for discussions/comments that help developers and users work through problems that can't be fixed all at once.
+
+### Website Specific Notes
+In your download library on **Gumroad**, you must click on one of the items and return to the library page. Gumroad must validate that you are human in the download page. If you don't do this, then it can't scan your library and you'll get an alert message.
+
+This extension gathers data from the **Fab Quixel Megascans** store page, whether or not you actually have access to download it. There is a download limit that prevents this extension from downloading data on all of the items in the store. This issue should be fixed soon.
+
+## DB Viewer
+To open the viewer page so you can view and filter your assets, click on the popup button labeled "DB Viewer", and it will open a new tab. You'll see a table of your game assets. Above the table is the filter form, and below the table are the pagination links. You may have to refresh this page to show newly imported items. They will be displayed in the order that they were first imported, so stuff imported later may appear in other pages.
+
+The table includes the image preview, the title (along with category and tags if available), publisher, order ID, purchase date, the store it was imported from, and the URL (View link) to open the product details page. The extension tries to get only these details, but some stores don't make this information easily available without having to parse through many pages. So, some details (like Publisher, Order ID, Purchase Date) may not be available depending on the store.
+
+You can quickly filter the table of items by selecting the store, tag, or category. You can further filter items by entering text in the search text box. For quick searches, entering text will filter the existing cache but it won't get other pages. If you click Enter (return) key, then it will do a more extensive search. This search can be filtered/limited to the store dropdown selection, but it won't be filtered by the tag or category selections. The tag and category filters will not be limited by the store dropdown selection, because they are independent filters. Why aren't these extra filters more integrated? It's because more filters increase the complexity and more database filtering functions. That's more code to maintain and probably it won't get much use anyway.
+![DB Viewer](screenshots/dbviewer.png)
+
+## Exporting Your Data
+In the DB Viewer, click the "Open Exporter" button in the upper right corner. I dialog will appear. Select the file format that you would like to export it to with the "Select Exporter" dropdown, which includes CSV, Excel, JSON, and Text (tab delimited). You can split the export into multiple files by selecting the dropdown labeled "Split files by (pagination)". If there are enough items, then new buttons will appear at the bottom labeled "Export File 1", "Export File 2", and so on. By clicking the "Export All Rows" button, it will export it all into one big file.
+![Export Data Dialog](screenshots/export_dialog.png)
+
+If you have MS Excel and a MS Office 365 subscription, you can use the [IMAGE function](https://support.microsoft.com/en-us/office/image-function-7e112975-5e52-4f2a-b9da-1d913d51f5d5) and it you can then view your image previews within Excel. **CAUTION**: If you have many rows, then this function will open many images and that will increase the amount of memory required by MS Excel, potentially causing it to freeze. This doesn't happen in the browser viewing page because the images have lazy loading and pagination.
+
+[Google Sheets also has an IMAGE function](https://support.google.com/docs/answer/3093333?sjid=10609043950136059980-NC). Again, take caution with the amount of rows and images that will be loaded.
+
+
+## Testing the Queries on HTML DOMs and APIs
+Websites change over time. This browser extension depends on quering the HTML DOM structures and APIs. When they change, the extension can break. Therefore, another browser extension, `test_extension`, is included to test the queries that are used and provide immediate validation without breaking. You can install it using the browser extension developer features if you want. I use it every month to ensure the queries still work, and then fix the ones that are broken.
+
+### TODO: the tests have not been implemented yet.
+
+----
+
+## Contributing
+I am open to suggestions and feedback. If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request. Also, let me know if there is an asset store that should be included.
+
+## License
+This project is licensed under the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).  
+You are free to use, modify, and distribute with minimal restriction.
+
+## Acknowledgements
+Thanks to the open-source community for their contributions and support.
+- [ExcelJS - to export to MS Excel spreadsheet](https://github.com/exceljs/exceljs)
+Code research aided by Google Gemini. Code completion and suggestions provided by Github Copilot in VS Code. Thanks to the contributors on StackOverflow and Reddit too!
+

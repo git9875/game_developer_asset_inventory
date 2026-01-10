@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Asset Viewer</title>
+    <link rel="stylesheet" href="dbviewer.css">
+</head>
+<body>
+    <div class="container">
+        <button id="open-exporter-dialog-btn">Open Exporter</button>
+        <h1>Game Asset Viewer</h1>
+        <p id="backup-notice">Consider exporting your data for backup. If you uninstall the extension, your data will be lost. You could also re-import it from the game asset stores too.</p>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="store-select">Select Store:</label>
+                <select id="store-select">
+                    <option value="">-- Loading stores --</option>
+                </select>
+            </div>
+            <button id="load-data-button">Load</button>
+            <input type="text" id="searchBox" class="search-box" placeholder="Search, press enter for more results...">
+            <div class="rows-per-page">
+                <label for="rowsPerPage">Rows per page:</label>
+                <select id="rowsPerPage">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="control-group">
+                <label for="tag-select">Select Tag:</label>
+                <select id="tag-select">
+                    <option value="">-- Loading tags --</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="category-select">Select Category:</label>
+                <select id="category-select">
+                    <option value="">-- Loading categories --</option>
+                </select>
+            </div>
+        </div>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title, Category, Tags</th>
+                    <th>Publisher</th>
+                    <th>Order ID</th>
+                    <th>Purchase Date</th>
+                    <th>Store</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination"></div>
+        <div id="pagination-summary"></div>
+
+        <dialog id="exporter-dialog">
+            <button id="close-exporter-dialog-btn">X</button>
+            <form id="exporter-form">
+                <h2>Export Data</h2>
+                <p>This will export according to filters on the table, except for pagination.</p>
+
+                <div id="exporter-select-wrapper">
+                    <div class="exporter-column">
+                        <label for="exporter-select">Select Exporter:</label>
+                        <select id="exporter-select">
+                            <option value="csv">CSV</option>
+                            <option value="excel">Excel</option>
+                            <option value="json">JSON</option>
+                            <option value="text">Text</option>
+                        </select>
+                    </div>
+
+                    <div class="exporter-column">
+                        <label for="exporter-rows-split-select">Split files by (pagination):</label>
+                        <select id="exporter-rows-split-select">
+                            <option value="100000000">-- No Split --</option>
+                            <option value="100">100 rows</option>
+                            <option value="1000">1000 rows</option>
+                            <option value="10000">10000 rows</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="exporter-dialog-buttons">
+                    <button type="button" id="export-all-btn">Export All Rows</button>
+                    <button type="button" id="close-exporter-dialog-btn2">Close</button>
+                    <p id="export-info"></p>
+                </div>
+                <div id="export-btns-wrapper"></div>
+            </form>
+        </dialog>
+    </div>
+
+    <script type="module" src="dbviewer.js"></script>
+</body>
+</html>
