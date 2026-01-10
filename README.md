@@ -7,7 +7,7 @@ This extension DOES NOT download the assets. It only gets basic information: **t
 
 I realize that people will have concerns about a browser extension that gets the data from their order history. The extension is provided here to be transparent and show what exactly the code does. It uses plain JavaScript without transpiling, minification, nor obfuscation so that it is easy to inspect and debug.
 
-## Note to Official Asset Store Personell
+## Note to Official Asset Store Personnel
 This browser extension provides a service for the user, your users. I do not collect any information from them. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
 
 
