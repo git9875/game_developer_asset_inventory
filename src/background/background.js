@@ -6,7 +6,7 @@ indb.openDatabase().then((database) => {
 });
 
 const browserAPI = chrome || browser;
-
+let lastError = null;
 
 function sendMessageToContentScript(message) {
     getCurrentTabId().then((tabId) => {
@@ -18,27 +18,26 @@ function sendMessageToContentScript(message) {
         browserAPI.tabs.sendMessage(tabId, message).then((response) => {
             console.log("(background) Response from content script:", response);
         }).catch((error) => {
-            console.error("(background) Error sending message to content script:", error);
-            console.error("(background) Make sure the content script is loaded in the active tab.", tabId);
+            console.warn("(background) Error sending message to content script. Make sure the content script is loaded in the active tab.", tabId, error);
         });
     });
 }
 
 
-const gameTabSessions = {
+const tabSessions = {
     // tabId: { store: "", collectedAssets: {}, totalAssets: 0, percentDone: 0, lastUpdated: timestamp }
 };
 
 function expireOldSessions() {
     const now = Math.floor((new Date()).getTime() / 1000);
     const expirationSeconds = 300; // 5 minutes
-    // console.log("(background) Expiring old sessions...", gameTabSessions);
+    // console.log("(background) Expiring old sessions...", tabSessions);
 
-    for (const tabId in gameTabSessions) {
-        const session = gameTabSessions[tabId];
+    for (const tabId in tabSessions) {
+        const session = tabSessions[tabId];
         if (now - expirationSeconds > session.lastUpdated) {
             // console.log(`(background) Expiring session for tab ${tabId}`);
-            delete gameTabSessions[tabId];
+            delete tabSessions[tabId];
         }
     }
 }
@@ -54,8 +53,8 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
             
             if (message.action === "SENDING_CONTENT") {
                 // store received data in memory or indexedDB
-                gameTabSessions[tabId] = gameTabSessions[tabId] || { store: "", totalAssets: 0, percentDone: 0, lastUpdated: null }; // , collectedAssets: {}
-                const session = gameTabSessions[tabId];
+                tabSessions[tabId] = tabSessions[tabId] || { store: "", totalAssets: 0, percentDone: 0, lastUpdated: null }; // , collectedAssets: {}
+                const session = tabSessions[tabId];
                 const assets = Object.values(message.data.assets);
                 session.lastUpdated = Math.floor((new Date()).getTime() / 1000);
                 session.percentDone = message.data.percentDone || session.percentDone;
@@ -73,10 +72,11 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
             else if (message.action === "ERROR") {
                 console.error(`(background) Error reported from content script: ${message.data.message}`);
                 
-                if (tabId in gameTabSessions) {
-                    gameTabSessions[tabId] = gameTabSessions[tabId] || { store: "", totalAssets: 0, percentDone: 0, lastUpdated: null }; // , collectedAssets: {}
-                    const session = gameTabSessions[tabId];
+                if (tabId in tabSessions) {
+                    tabSessions[tabId] = tabSessions[tabId] || { store: "", totalAssets: 0, percentDone: 0, lastUpdated: null }; // , collectedAssets: {}
+                    const session = tabSessions[tabId];
                     session.error = message.data.message;
+                    lastError = message.data.message;
                 }
             }
         }
@@ -96,12 +96,12 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
                 // check if there is already a session for this tab
                 expireOldSessions();
-                if (tabId in gameTabSessions) {
+                if (tabId in tabSessions) {
                     console.error(`(background) Session already exists for tab ${tabId}`);
                     return;
                 }
                 else {
-                    gameTabSessions[tabId] = { store: "", totalAssets: 0, percentDone: 0, lastUpdated: null }; // , collectedAssets: {}
+                    tabSessions[tabId] = { store: "", totalAssets: 0, percentDone: 0, lastUpdated: null }; // , collectedAssets: {}
                 }
 
                 sendMessageToContentScript({ command: "PARSE_GAME_ASSETS", data: {} });
@@ -109,13 +109,13 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
             else if (message.action === "POLL_INVENTORY") {
                 // console.log("(background) Polling for inventory...");
                 // get game tab session 
-                if (!(tabId in gameTabSessions)) {
+                if (!(tabId in tabSessions)) {
                     console.warn(`(background) No session found for tab ${tabId}`);
                     sendResponse({ action: "INVENTORY_PROGRESS", data: { count:0, percentDone:0, isComplete:true } });
                     return;
                 }
 
-                const session = gameTabSessions[tabId];
+                const session = tabSessions[tabId];
                 const isComplete = session ? (session.percentDone >= 100) : false;
                 const data = { count:session.totalAssets, percentDone:session.percentDone, isComplete:isComplete };
                 // console.log("(background) Inventory progress data:", data);
@@ -130,8 +130,9 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
             }
             else if (message.action === "RESET_GATHERING_INVENTORY") {
                 // console.log("(background) Resetting gathering inventory...");
-                if (tabId in gameTabSessions) {
-                    delete gameTabSessions[tabId];
+                lastError = null;
+                if (tabId in tabSessions) {
+                    delete tabSessions[tabId];
                 }
                 sendMessageToContentScript({ command: "STOP_PARSING", data: {} });
             }
@@ -152,9 +153,12 @@ function handlePopupIsReadyMessage() {
             return;
         }
 
-        const tabInGameInventorySession = (tabs[0].id in gameTabSessions);
+        const tabInGameInventorySession = (tabs[0].id in tabSessions);
         // console.log("Popup is ready. Note available tabs...", tabs);
         const data = { isGatheringInventory: tabInGameInventorySession };
+        if (lastError) {
+            data.lastError = lastError;
+        }
         return { action: "LOAD_RESPONSE", data: data };
     });
 }
