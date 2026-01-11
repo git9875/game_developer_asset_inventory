@@ -3,14 +3,14 @@ The purpose of this browser extension is to enable game developers to take inven
 
 This browser extension scrapes your game development asset orders from popular sites. It stores the data in your browser's database for you to view. You have options of exporting the data to local files such as CSV and JSON. No data is collected/exported to an outside server. This is YOUR data, and this browser extension helps you view your items from all the popular stores that your ordered from. You will need to login to these sites in order for the extension to scrape the order listings.
 
-This extension DOES NOT download the assets. It only gets basic information: **title, URL, image URL, order ID (if available), purchase date (if available), and store name**. That's it. When it does use store APIs (GraphQL), it is more narrow in scope (limited product data) than what is queried on their own websites.
+This extension DOES NOT download the assets. It only gets basic information: **title, URL, image URL, order ID (if available), purchase date (if available), store name, cateogry, and tags**. That's it. When it does use store APIs (GraphQL), it is more narrow in scope (limited to product data) than what is available on the store websites.
 
-I realize that people will have concerns about a browser extension that gets the data from their order history. The extension is provided here to be transparent and show what exactly the code does. It uses plain JavaScript without transpiling, minification, nor obfuscation so that it is easy to inspect and debug.
+I realize that people will have concerns about a browser extension that gets the data from their order history. The extension is provided here in this repository to be transparent and show what exactly the code does. It uses plain JavaScript without transpiling, minification, nor obfuscation so that it is easy to inspect and debug.
 
 Within this repository, `src` is the code for the actual browser extension. `test_extension` is used to [test DOM and API queries](#testing).
 
 ## Note to Official Asset Store Personnel
-This browser extension provides a service for the user, your users. I do not collect any information from them. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
+This browser extension provides a tool for the user, your users. I do not collect any information from them, nor do I profit from this. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
 
 Also, web requests are throttled syncronously at half a second to prevent sending too many requests at one time.
 
@@ -125,9 +125,13 @@ To mitigate the issue of too many images in the spreadsheet, you could export fi
 
 Websites change over time. This browser extension depends on quering the HTML DOM structures and APIs. When they change, the extension can break. Therefore, an additional browser extension, `test_extension`, is included in this repository to test the queries that are used and provide immediate validation without breaking. You can install it using the browser extension developer features if you want. I use it periodically every mid-month to ensure the queries still work, and then fix the ones that are broken.
 
-*Note to self: DO NOT release too much public code that requires periodic updates! That will consume too much of my time or allow bugs to accumulate due to external dependencies. Is anyone else out there interested in becoming a project partner that can take on this responsibility?*
+![Test Viewer](screenshots/test_viewer.png)
+
+*Note to self: DO NOT release too much public code that requires periodic updates! That will consume too much time or allow bugs to accumulate due to external dependencies. Is anyone else out there interested in becoming a project partner that can take on this responsibility?*
 
 To install the test extension, see [Developer Installation](#developer-intallation), but select test_extension rather than src for the directory.
+
+The test pop-up is similar to the inventory pop-up, except that the progress bar represents pass percentage. The number of tests varies, depending on loops, because the tests iterate over rows of tables from various order pages, and the number of iterations are limited so that hundreds of redundant tests don't show up in the test viewer.
 
 #### TODO: most tests have not been implemented yet.
 Completed tests so far:

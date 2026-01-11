@@ -3,6 +3,7 @@ const store = '3D Shards';
 const sleepMilliseconds = 500;
 let allowedToParse = false;
 const groupTimestamp = createLocalDateISO();
+const iterationLimitPerTest = 3;
 let totalTestsRun = 0;
 let totalTestsPassed = 0;
 
@@ -20,6 +21,7 @@ browserAPI.runtime.onMessage.addListener(async (request, sender, sendResponse) =
         allowedToParse = false;
     }
 });
+
 
 function createLocalDateISO() {
   const date = new Date();
@@ -100,6 +102,10 @@ async function mainParsing() {
 
     orderDict[url] = {'url':url, 'title':title};
     rowNum += 1;
+
+    if (rowNum > iterationLimitPerTest) {
+      break; // limit number of orders parsed for testing
+    }
   }
   // console.log(`(${store}) found ${Object.keys(orderDict).length} products in downloads page. mainParsing `, orderDict);
 
@@ -158,6 +164,10 @@ async function getOrderUrls() {
     const url = link.href;
     orderUrls.push(url);
     rowNum += 1;
+
+    if (rowNum > iterationLimitPerTest) {
+      break; // limit number of orders parsed for testing
+    }
   }
 
   // console.log(`(${store}) found ${orderUrls.length} orders, getOrderUrls`, orderUrls);
@@ -252,7 +262,7 @@ async function parseOrderDetailsPage(orderUrl, orderDict, downloadsParsedAlready
     currentAssets[productUrl] = product;
     productCount += 1;
 
-    if (productCount > 3) {
+    if (productCount > iterationLimitPerTest) {
       break; // limit number of products parsed per order for testing
     }
 
