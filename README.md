@@ -131,7 +131,20 @@ To install the test extension, see [Developer Installation](#developer-intallati
 
 #### TODO: most tests have not been implemented yet.
 Completed tests so far:
-- 3D Shards
+- [x] 3D Shards
+- [ ] CGTrader
+- [ ] Daz3D
+- [ ] Fab Quixel
+- [ ] Fab Unreal
+- [ ] Gumroad
+- [ ] Kitbash3D
+- [ ] Leartes Studios
+- [ ] Ovani Sound
+- [ ] RenderHub
+- [ ] Blender (Super Hive)
+- [ ] Synty Studios
+- [ ] TurboSquid
+- [ ] Unity Asset Store
 
 In the Test Viewer page, the records are in reverse order to show the latest tests first. The Group Timestamp column represents a test run on a group of tests on a page (game asset store). The dark gray row is a visual separator of test runs.
 
