@@ -1,0 +1,105 @@
+{
+  "name": "Game Developer Assets Inventory",
+  "manifest_version": 3,
+  "version": "1.0.4",
+
+  "description": "Extracts basic product item data from a user's order history in game developer stores to view and export to their local storage.",
+
+  "icons": {
+    "48": "icons/inventory_3d_objects_icon_48.png",
+    "128": "icons/inventory_3d_objects_icon_128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://3dshards.com/account-4/downloads/*"],
+      "js": ["content_scripts/3dshards.js"]
+    },
+    {
+      "matches": ["https://www.cgtrader.com/profile/purchases*"],
+      "js": ["content_scripts/cgtrader.js"]
+    },
+    {
+      "matches": ["https://www.daz3d.com/sales/order/history*"],
+      "js": ["content_scripts/daz3d.js"]
+    },
+    {
+      "matches": ["https://www.fab.com/library*"],
+      "js": ["content_scripts/fab_unreal.js"]
+    },
+    {
+      "matches": ["https://www.fab.com/sellers/Quixel%20Megascans*"],
+      "js": ["content_scripts/fab_quixel.js"]
+    },
+    {
+      "matches": ["https://gumroad.com/library*"],
+      "js": ["content_scripts/gumroad.js"]
+    },
+    {
+      "matches": ["https://cargo-app.kitbash3d.com/account/my-assets*"],
+      "js": ["content_scripts/kitbash3d.js"]
+    },
+    {
+      "matches": ["https://cosmos.leartesstudios.com/inventory*"],
+      "js": ["content_scripts/leartes.js"]
+    },
+    {
+      "matches": ["https://ovanisound.com/account*"],
+      "js": ["content_scripts/ovanisound.js"]
+    },
+    {
+      "matches": ["https://www.renderhub.com/my-downloads*"],
+      "js": ["content_scripts/renderhub.js"]
+    },
+    {
+      "matches": ["https://superhivemarket.com/account/orders*"],
+      "js": ["content_scripts/shm_blender.js"]
+    },
+    {
+      "matches": ["https://account.syntystore.com/orders*"],
+      "js": ["content_scripts/synty.js"]
+    },
+    {
+      "matches": ["https://www.turbosquid.com/Order/Index.cfm*"],
+      "js": ["content_scripts/turbosquid.js"]
+    },
+    {
+      "matches": ["https://assetstore.unity.com/account/assets*"],
+      "js": ["content_scripts/unity.js"]
+    }
+  ],
+
+  "permissions": [
+    "cookies",
+    "activeTab",
+    "storage",
+    "downloads",
+    "tabs"
+  ],
+
+  "action": {
+    "default_icon": "icons/inventory_3d_objects_icon_32.png",
+    "theme_icons": [{
+        "light": "icons/inventory_3d_objects_icon_32.png",
+        "dark": "icons/inventory_3d_objects_icon_32.png",
+        "size": 32
+    }],
+    "default_title": "Game Developer Assets Inventory",
+    "default_popup": "popup/run_inventory.html"
+  },
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "background/db.mjs",
+        "background/testviewer.html",
+        "background/testviewer.js",
+        "background/testviewer.css"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

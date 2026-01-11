@@ -26,7 +26,7 @@ The Safari browser will NOT get this extension in their App Store since it requi
 ## Developer Intallation
 You can install this extension temporarily and include any modifications you make to it locally. However, keep in mind it will probably disappear after you close your browser. It could be removed when your browser session ends (closed).
 
-Clone or download this repository. Navigate to the src directory. You'll nee to load extension using either the src directory or the manifest.json file within it. Check out these YouTube tutorials on how to install it:
+Clone or download this repository. Navigate to the src directory. You'll need to load extension using either the src directory or the manifest.json file within it. Check out these YouTube tutorials on how to install it:
 - [Firefox install video on YouTube](https://youtu.be/dhaGRJvJAII?si=z4nBw8WIzdAorbD9&t=97)
     - Type `about:debugging#/runtime/this-firefox` into the address bar and press Enter.
     - Click the Load Temporary Add-on... button.

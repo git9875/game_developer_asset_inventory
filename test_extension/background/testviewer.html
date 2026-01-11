@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Viewer</title>
+    <link rel="stylesheet" href="testviewer.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Test Viewer</h1>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="store-select">Select Store:</label>
+                <select id="store-select">
+                    <option value="">-- Loading stores --</option>
+                </select>
+            </div>
+            <button id="load-data-button">Load</button>
+            <input type="text" id="searchBox" class="search-box" placeholder="Search, press enter for more results...">
+            <div class="rows-per-page">
+                <label for="rowsPerPage">Rows per page:</label>
+                <select id="rowsPerPage">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Store</th>
+                    <th>Name</th>
+                    <th>Passed</th>
+                    <th>Details</th>
+                    <th>Timestamp</th>
+                    <th>Group Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination"></div>
+        <div id="pagination-summary"></div>
+
+    </div>
+
+    <script type="module" src="testviewer.js"></script>
+</body>
+</html>
