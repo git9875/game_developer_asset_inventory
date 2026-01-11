@@ -1,4 +1,5 @@
 const browserAPI = chrome || browser;
+const ERROR_CONTENT_DEFAULT_MESSAGE = "<p>Can't get inventory from this page.</p><p>Try a different page.</p>";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const selectPage = document.getElementById("select-page");
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     document.getElementById("reset").addEventListener("click", () => {
+        document.getElementById("error-content").innerHTML = ERROR_CONTENT_DEFAULT_MESSAGE;
         browserAPI.runtime.sendMessage({ source:"POPUP", action:"RESET_GATHERING_INVENTORY" });
         window.location.reload();
     });
@@ -74,6 +76,14 @@ async function handleLoadResponse(message) {
     } else {
         document.getElementById("found-inventory").classList.add("hidden");
         document.getElementById("error-content").classList.remove("hidden");
+    }
+
+    if (message.data.lastError) {
+        document.getElementById("error-content").innerHTML = `<p>Error: ${message.data.lastError}</p>`;
+
+        if (document.getElementById("error-content").classList.contains("hidden")) {
+            document.getElementById("error-content").classList.remove("hidden");
+        }
     }
 
     if (message.data.isGatheringInventory) {

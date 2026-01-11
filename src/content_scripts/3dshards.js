@@ -39,14 +39,11 @@ async function mainParsing() {
   // console.log(`(${store}) found ${Object.keys(orderDict).length} products in downloads page. mainParsing `, orderDict);
 
   const orderUrls = await getOrderUrls();
-  const totalPages = orderUrls.length;
-  let currentPageNumber = 1;
   let downloadsParsed = 0;
 
   for (const orderUrl of orderUrls) {
     if (!allowedToParse) { break; }
-    downloadsParsed += await parseOrderDetailsPage(orderUrl, orderDict, currentPageNumber, totalPages, downloadsParsed);
-    currentPageNumber += 1;
+    downloadsParsed += await parseOrderDetailsPage(orderUrl, orderDict, downloadsParsed);
   }
 }
 // unsure if 3dshards provides pagination
@@ -78,7 +75,7 @@ async function getOrderUrls() {
 }
 
 
-async function parseOrderDetailsPage(orderUrl, orderDict, currentPageNumber, totalPages, downloadsParsedAlready) {
+async function parseOrderDetailsPage(orderUrl, orderDict, downloadsParsedAlready) {
   const urlTokens = orderUrl.split('/'); //    https://3dshards.com/account-4/view-order/40132/
   const orderId = urlTokens[urlTokens.length - 2];
   const totalDownloads = Object.keys(orderDict).length;
