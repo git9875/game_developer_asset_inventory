@@ -10,21 +10,23 @@ I realize that people will have concerns about a browser extension that gets the
 ## Note to Official Asset Store Personnel
 This browser extension provides a service for the user, your users. I do not collect any information from them. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
 
+Also, web requests are throttled syncronously at half a second to prevent sending too many requests at one time.
 
 ## Preferred Installation through Browser Extension Listings
 The preferred way for you to install this is through the browser extension sites:
 - [Firefox Addon](https://addons.mozilla.org/en-US/firefox/extensions/)
-- Chrome
-- Edge
+- [Chrome](https://chromewebstore.google.com/category/extensions)
+- [Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)
 
-The Safari browser will not get an extension from their App Store since it requires conversion to Swift code. However, through the Safari browser developer options, you can <a href="https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension#Temporarily-install-a-web-extension-folder-in-macOS-Safari">install it manually and temporarily</a>.
+The Safari browser will NOT get this extension in their App Store since it requires conversion to Swift code. However, through the Safari browser developer options, you can <a href="https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension#Temporarily-install-a-web-extension-folder-in-macOS-Safari">install it manually and temporarily</a>.
 
-### Note: test and submit the extension to these sites and fill in the links above.
+#### TODO: update direct extension links when extensions are approved.
 
 
 ## Developer Intallation
-You can install this extension temporarily and include any modifications you make to it locally. However, it may not last. It could be removed when your browser session ends (closed).
-In the src directory, use the manifest.json file.
+You can install this extension temporarily and include any modifications you make to it locally. However, keep in mind it will probably disappear after you close your browser. It could be removed when your browser session ends (closed).
+
+Clone or download this repository. Navigate to the src directory. You'll nee to load extension using either the src directory or the manifest.json file within it. Check out these YouTube tutorials on how to install it:
 - [Firefox install video on YouTube](https://youtu.be/dhaGRJvJAII?si=z4nBw8WIzdAorbD9&t=97)
     - Type `about:debugging#/runtime/this-firefox` into the address bar and press Enter.
     - Click the Load Temporary Add-on... button.
@@ -32,7 +34,8 @@ In the src directory, use the manifest.json file.
     - This installs the extension temporarily until Firefox restarts.
     - Notice the Inspect button, which you can click to open Developer Tools to view any console messages.
 - [Chrome install video on YouTube](https://youtu.be/dhaGRJvJAII?si=IRs_BkdTNUsapC64&t=53)
-- Edge
+- [Edge install video on YouTube](https://www.youtube.com/watch?v=CeRJr2bSgR0)
+- [Safari install video on YouTube](https://www.youtube.com/watch?v=J7myzTL1P4w) - an official version will NOT be released for Safari since it requires conversion to Swift code. Trying to keep this project simple.
 
 
 ## Supported Game Asset Stores
@@ -53,7 +56,7 @@ These are the game developer asset sites for which you can import your order/ass
 - [TurboSquid](https://www.turbosquid.com)
 - [Unity](https://assetstore.unity.com)
 
-If there is another game asset store that you would like supported, let me know.
+If there is another game asset store that you would like supported, [let me know with a new Github issue](https://github.com/git9875/game_developer_asset_inventory/issues).
 
 
 ## Using the Extension (Add-On)
@@ -61,17 +64,21 @@ If there is another game asset store that you would like supported, let me know.
 In your browser toolbar, pin the extension so you'll have easy access to it. Click on the icon and you'll see a small pop-up window.
 
 To start with, it may tell you "Can't get inventory from this page. Try a different page." Click the dropdown list and select a store. It will redirect your browser tab to the correct page that it can access the asset library. The website may redirect you to the login page. After you login, you may need to select from the dropdown again to get to the correct page.
+
 ![dropdown to select a page](screenshots/select_page.png)
 
 When you are on a valid page that it can access the asset store, close and open the popup again so it will refresh. You will see a button labeled "Start Gathering Inventory". Click it it and it will start running.
+
 ![button to start gathering inventory](screenshots/popup_default.png)
 
-It may take a little while to get running, depending on the site. The progress bar will give you an indication of how long it will take till it completes. If after a long while it does not even start, click the Reset button and refresh the web page. Close and open the extension popup, and click the "Start Gathering Inventory" button again. If it does not work, then there might be an error. You can submit an issue through this Github page. When this is complete, and you want to go to a different page, click the Reset button and the page selector dropdown will display again.
+It may take a little while to get running, depending on the site. The progress bar will give you an indication of how long it will take till it completes. If after a long while it does not even start, click the Reset button and refresh the web page. Close and open the extension popup, and click the "Start Gathering Inventory" button again. If it does not work, then there might be an error. You can submit an [issue through this Github page](https://github.com/git9875/game_developer_asset_inventory/issues). When this is complete, and you want to go to a different page, click the Reset button and the page selector dropdown will display again.
+Note: web requests are throttled syncronously at half a second to prevent sending too many requests too quickly.
+
 ![running and progress indicator](screenshots/running.png)
 
 If you click somewhere else while it is still gathering, the popup may close. When you re-open it, the progress indicator may not appear yet. Give it a few seconds and it should re-appear.
 
-**Note:** I'm limited by what I can view and research in the asset stores that I have. If I don't have enough purchased items / orders, then pagination links may not appear for me to inspect in the DevTools and find the proper HTML DOM query needed to parse additional pages. Some stores like Fab use infinite scrolling instead of pagination, and that uses additional API requests. Maybe you have more orders for such stores and this extension doesn't parse the extra pages. If so, you can fill out an issue on this Github repository and let me know. Any details that you can provide will be helpful. If you can go into DevTools and find the pagination links or additional API network requests, that will help me fix the issue faster (though it will require your additional help with testing). The Github issue page allows for discussions/comments that help developers and users work through problems that can't be fixed all at once.
+**Note:** I'm limited by what I can view and research in the asset stores that I have. If I don't have enough purchased items / orders, then pagination links may not appear for me to inspect in the DevTools and find the proper HTML DOM query needed to parse additional pages. Some stores like Fab use infinite scrolling instead of pagination, and that uses additional API requests. Maybe you have more orders for such stores and this extension doesn't parse the extra pages. If so, you can [fill out an issue on this Github repository and let me know](https://github.com/git9875/game_developer_asset_inventory/issues). Any details that you can provide will be helpful. If you can go into DevTools and find the pagination links or additional API network requests, that will help me fix the issue faster (though it will require your additional help with testing). The Github issue page allows for discussions/comments that help developers and users work through problems that can't be fixed all at once.
 
 ### Website Specific Notes
 In your download library on **Gumroad**, you must click on one of the items and return to the library page. Gumroad must validate that you are human in the download page. If you don't do this, then it can't scan your library and you'll get an alert message.
@@ -84,26 +91,32 @@ To open the viewer page so you can view and filter your assets, click on the pop
 The table includes the image preview, the title (along with category and tags if available), publisher, order ID, purchase date, the store it was imported from, and the URL (View link) to open the product details page. The extension tries to get only these details, but some stores don't make this information easily available without having to parse through many pages. So, some details (like Publisher, Order ID, Purchase Date) may not be available depending on the store.
 
 You can quickly filter the table of items by selecting the store, tag, or category. You can further filter items by entering text in the search text box. For quick searches, entering text will filter the existing cache but it won't get other pages. If you click Enter (return) key, then it will do a more extensive search. This search can be filtered/limited to the store dropdown selection, but it won't be filtered by the tag or category selections. The tag and category filters will not be limited by the store dropdown selection, because they are independent filters. Why aren't these extra filters more integrated? It's because more filters increase the complexity and more database filtering functions. That's more code to maintain and probably it won't get much use anyway.
+
 ![DB Viewer](screenshots/dbviewer.png)
 
 ## Exporting Your Data
 In the DB Viewer, click the "Open Exporter" button in the upper right corner. I dialog will appear. Select the file format that you would like to export it to with the "Select Exporter" dropdown, which includes CSV, Excel, JSON, and Text (tab delimited). You can split the export into multiple files by selecting the dropdown labeled "Split files by (pagination)". If there are enough items, then new buttons will appear at the bottom labeled "Export File 1", "Export File 2", and so on. By clicking the "Export All Rows" button, it will export it all into one big file.
+
+The store name is the only filter that you can select from before opening the Exporter dialog which will limit the exported data to the selected store name.
+
 ![Export Data Dialog](screenshots/export_dialog.png)
 
-If you have MS Excel and a MS Office 365 subscription, you can use the [IMAGE function](https://support.microsoft.com/en-us/office/image-function-7e112975-5e52-4f2a-b9da-1d913d51f5d5) and it you can then view your image previews within Excel. **CAUTION**: If you have many rows, then this function will open many images and that will increase the amount of memory required by MS Excel, potentially causing it to freeze. This doesn't happen in the browser viewing page because the images have lazy loading and pagination.
+#### Spreadsheet IMAGE function
+If you have MS Excel and a MS Office 365 subscription, you can use the [IMAGE function](https://support.microsoft.com/en-us/office/image-function-7e112975-5e52-4f2a-b9da-1d913d51f5d5) and with it you can then view your image previews within Excel. **CAUTION**: If you have many rows, then this function may open many images and that will increase the amount of memory required by MS Excel, potentially causing it to freeze. This doesn't happen in the browser viewing page because the images have lazy loading and pagination.
 
 [Google Sheets also has an IMAGE function](https://support.google.com/docs/answer/3093333?sjid=10609043950136059980-NC). Again, take caution with the amount of rows and images that will be loaded.
 
+To mitigate the issue of too many images in the spreadsheet, you could export filter the exported data by store name first, which will reduce the amount of rows exported.
 
 ## Testing the Queries on HTML DOMs and APIs
 Websites change over time. This browser extension depends on quering the HTML DOM structures and APIs. When they change, the extension can break. Therefore, another browser extension, `test_extension`, is included to test the queries that are used and provide immediate validation without breaking. You can install it using the browser extension developer features if you want. I use it every month to ensure the queries still work, and then fix the ones that are broken.
 
-### TODO: the tests have not been implemented yet.
+#### TODO: tests have not been implemented yet.
 
 ----
 
 ## Contributing
-I am open to suggestions and feedback. If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request. Also, let me know if there is an asset store that should be included.
+I am open to suggestions and feedback. If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request. Also, [let me know](https://github.com/git9875/game_developer_asset_inventory/issues) if there is an asset store that should be included.
 
 ## License
 This project is licensed under the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).  
@@ -112,5 +125,9 @@ You are free to use, modify, and distribute with minimal restriction.
 ## Acknowledgements
 Thanks to the open-source community for their contributions and support.
 - [ExcelJS - to export to MS Excel spreadsheet](https://github.com/exceljs/exceljs)
+
 Code research aided by Google Gemini. Code completion and suggestions provided by Github Copilot in VS Code. Thanks to the contributors on StackOverflow and Reddit too!
 
+## Links
+- [Official Page on Vintillect website](https://vintillect.com/game_developer_asset_inventory/)
+- [Privacy Policy](https://vintillect.com/game_developer_asset_inventory/privacy.html)
