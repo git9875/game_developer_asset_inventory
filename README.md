@@ -7,6 +7,8 @@ This extension DOES NOT download the assets. It only gets basic information: **t
 
 I realize that people will have concerns about a browser extension that gets the data from their order history. The extension is provided here to be transparent and show what exactly the code does. It uses plain JavaScript without transpiling, minification, nor obfuscation so that it is easy to inspect and debug.
 
+Within this repository, `src` is the code for the actual browser extension. `test_extension` is used to [test DOM and API queries](#testing).
+
 ## Note to Official Asset Store Personnel
 This browser extension provides a service for the user, your users. I do not collect any information from them. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
 
@@ -30,11 +32,21 @@ Clone or download this repository. Navigate to the src directory. You'll need to
 - [Firefox install video on YouTube](https://youtu.be/dhaGRJvJAII?si=z4nBw8WIzdAorbD9&t=97)
     - Type `about:debugging#/runtime/this-firefox` into the address bar and press Enter.
     - Click the Load Temporary Add-on... button.
-    - Navigate to your extension's folder and select the manifest.json file (or any file within the folder for unpacked extensions).
+    - Navigate to your extension's folder and select the manifest.json file.
     - This installs the extension temporarily until Firefox restarts.
     - Notice the Inspect button, which you can click to open Developer Tools to view any console messages.
 - [Chrome install video on YouTube](https://youtu.be/dhaGRJvJAII?si=IRs_BkdTNUsapC64&t=53)
-- [Edge install video on YouTube](https://www.youtube.com/watch?v=CeRJr2bSgR0)
+    - Type `chrome://extensions/` into the address bar and press Enter.
+    - Click Load Uppacked button.
+    - Navigate to your extension's folder and click Select Folder button.
+    - This installs the extension temporarily until Chrome restarts.
+    - If you want to see background.js console messages, right click on the extension pop-up and click Inspect, and then Console.
+- [Microsoft Edge install video on YouTube](https://www.youtube.com/watch?v=CeRJr2bSgR0)
+    - Type `edge://extensions/` into the address bar and press Enter.
+    - Click Load Uppacked button.
+    - Navigate to your extension's folder and click Select Folder button.
+    - This installs the extension temporarily until Edge restarts.
+    - If you want to see background.js console messages, right click on the extension pop-up and click Inspect, and then Console.
 - [Safari install video on YouTube](https://www.youtube.com/watch?v=J7myzTL1P4w) - an official version will NOT be released for Safari since it requires conversion to Swift code. Trying to keep this project simple.
 
 
@@ -108,10 +120,21 @@ If you have MS Excel and a MS Office 365 subscription, you can use the [IMAGE fu
 
 To mitigate the issue of too many images in the spreadsheet, you could export filter the exported data by store name first, which will reduce the amount of rows exported.
 
-## Testing the Queries on HTML DOMs and APIs
-Websites change over time. This browser extension depends on quering the HTML DOM structures and APIs. When they change, the extension can break. Therefore, another browser extension, `test_extension`, is included to test the queries that are used and provide immediate validation without breaking. You can install it using the browser extension developer features if you want. I use it every month to ensure the queries still work, and then fix the ones that are broken.
+## Testing
+... the queries on HTML DOMs and APIs
 
-#### TODO: tests have not been implemented yet.
+Websites change over time. This browser extension depends on quering the HTML DOM structures and APIs. When they change, the extension can break. Therefore, an additional browser extension, `test_extension`, is included in this repository to test the queries that are used and provide immediate validation without breaking. You can install it using the browser extension developer features if you want. I use it periodically every mid-month to ensure the queries still work, and then fix the ones that are broken.
+
+*Note to self: DO NOT release too much public code that requires periodic updates! That will consume too much of my time or allow bugs to accumulate due to external dependencies. Is anyone else out there interested in becoming a project partner that can take on this responsibility?*
+
+To install the test extension, see [Developer Installation](#developer-intallation), but select test_extension rather than src for the directory.
+
+#### TODO: most tests have not been implemented yet.
+Completed tests so far:
+- 3D Shards
+
+In the Test Viewer page, the records are in reverse order to show the latest tests first. The Group Timestamp column represents a test run on a group of tests on a page (game asset store). The dark gray row is a visual separator of test runs.
+
 
 ----
 
