@@ -121,25 +121,23 @@ If you have MS Excel and a MS Office 365 subscription, you can use the [IMAGE fu
 To mitigate the issue of too many images in the spreadsheet, you could export filter the exported data by store name first, which will reduce the amount of rows exported.
 
 ## Testing
-... the queries on HTML DOMs and APIs
+**Tests queries on HTML DOMs and APIs**
 
 Websites change over time. This browser extension depends on quering the HTML DOM structures and APIs. When they change, the extension can break. Therefore, an additional browser extension, `test_extension`, is included in this repository to test the queries that are used and provide immediate validation without breaking. You can install it using the browser extension developer features if you want. I use it periodically every mid-month to ensure the queries still work, and then fix the ones that are broken.
 
 ![Test Viewer](screenshots/test_viewer.png)
 
-*Note to self: DO NOT release too much public code that requires periodic updates! That will consume too much time or allow bugs to accumulate due to external dependencies. Is anyone else out there interested in becoming a project partner that can take on this responsibility?*
-
 To install the test extension, see [Developer Installation](#developer-intallation), but select test_extension rather than src for the directory.
 
-The test pop-up is similar to the inventory pop-up, except that the progress bar represents pass percentage. The number of tests varies, depending on loops, because the tests iterate over rows of tables from various order pages, and the number of iterations are limited so that hundreds of redundant tests don't show up in the test viewer.
+The test pop-up is similar to the inventory pop-up, except that the progress bar represents pass percentage. The number of tests varies, depending on loops, because the tests iterate over rows of tables from various order pages, and the number of iterations are limited so that hundreds of redundant tests don't show up in the test viewer. A small message "DONE" will appear after the percentage message in the pop-up when the test run is complete.
 
 #### TODO: most tests have not been implemented yet.
 Completed tests so far:
 - [x] 3D Shards
-- [ ] CGTrader
-- [ ] Daz3D
-- [ ] Fab Quixel
-- [ ] Fab Unreal
+- [x] CGTrader
+- [x] Daz3D
+- [x] Fab Quixel
+- [x] Fab Unreal
 - [ ] Gumroad
 - [ ] Kitbash3D
 - [ ] Leartes Studios
@@ -157,6 +155,8 @@ In the Test Viewer page, the records are in reverse order to show the latest tes
 
 ## Contributing
 I am open to suggestions and feedback. If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request. Also, [let me know](https://github.com/git9875/game_developer_asset_inventory/issues) if there is an asset store that should be included.
+
+*Note to self: DO NOT release too much public code that requires periodic updates! That will consume too much time or allow bugs to accumulate due to external dependencies. Is anyone else out there interested in becoming a project partner that can take on this responsibility?*
 
 ## License
 This project is licensed under the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).  

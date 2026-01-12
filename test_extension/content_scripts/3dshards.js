@@ -2,10 +2,13 @@ const browserAPI = chrome || browser;
 const store = '3D Shards';
 const sleepMilliseconds = 500;
 let allowedToParse = false;
+
 const groupTimestamp = createLocalDateISO();
 const iterationLimitPerTest = 3;
 let totalTestsRun = 0;
 let totalTestsPassed = 0;
+
+
 
 browserAPI.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.command === "PARSE_GAME_ASSETS") {
@@ -194,12 +197,20 @@ async function parseOrderDetailsPage(orderUrl, orderDict, downloadsParsedAlready
   const domParser = new DOMParser();
   const doc = domParser.parseFromString(htmlString, 'text/html');
 
+  if (!doc.querySelector(".order-date")) {
+    sendTestResultMessage("parseOrderDetailsPage(): find order date", false, `Missing order date.`);
+    return 0;
+  }
+  else {
+    sendTestResultMessage("parseOrderDetailsPage(): find order date", true, `Found order date.`);
+  }
+
   const purchaseDate = doc.querySelector('.order-date').textContent;
   const products = doc.querySelectorAll('.woocommerce-order-details .woocommerce-table--order-details tbody tr');
   // console.log(`(${store}) parsing order ${orderId}, found ${products.length} products. parseOrderDetailsPage,`, products);
   if (products.length === 0) {
     sendTestResultMessage("parseOrderDetailsPage(): DOM query order details table rows", false, "No rows found on order details page.");
-    return;
+    return 0;
   }
   else {
     sendTestResultMessage("parseOrderDetailsPage(): DOM query order details table rows", true, `Found ${products.length} rows on order details page.`);
@@ -284,7 +295,7 @@ async function getProductDetails(productUrl) {
     return null;
   }
   else {
-    sendTestResultMessage("getProductDetails(): fetch Product Details", true, `Successfully fetched product from ${productUrl}.`);
+    sendTestResultMessage("getProductDetails(): fetch Product Details", true, `Successfully fetched product from ${productUrl}`);
   }
 
   const htmlString = await response.text();

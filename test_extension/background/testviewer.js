@@ -146,18 +146,11 @@ async function handleStoreFilterChange() {
         });
 
     } else {
-        if (itemCount > rowsPerPage) {
-            // console.log(`dbviewer Loading tests for store "${storeFilter}" with pagination, 1, ${rowsPerPage}`);
-            await indb.getTestsByStoreByPage(db, storeFilter, 1, rowsPerPage).then((assets) => {
-                currentData = assets;
-                // console.log(`dbviewer Loaded ${assets.length} tests for store "${storeFilter}"`);
-            });
-        }
-        else {
-            await indb.getTestsByStore(db, storeFilter).then((assets) => {
-                currentData = assets;
-            });
-        }
+        // console.log(`dbviewer Loading tests for store "${storeFilter}" with pagination, 1, ${rowsPerPage}`);
+        await indb.getTestsByStoreByPage(db, storeFilter, 1, rowsPerPage).then((assets) => {
+            currentData = assets;
+            // console.log(`dbviewer Loaded ${assets.length} tests for store "${storeFilter}"`);
+        });
     }
 
     applyFilter();
