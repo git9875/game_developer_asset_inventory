@@ -118,7 +118,7 @@ If you have MS Excel and a MS Office 365 subscription, you can use the [IMAGE fu
 
 [Google Sheets also has an IMAGE function](https://support.google.com/docs/answer/3093333?sjid=10609043950136059980-NC). Again, take caution with the amount of rows and images that will be loaded.
 
-To mitigate the issue of too many images in the spreadsheet, you could export filter the exported data by store name first, which will reduce the amount of rows exported.
+To mitigate the issue of too many images in the spreadsheet, you could filter the exported data by store name first, which will reduce the amount of rows exported.
 
 ## Testing
 **Tests queries on HTML DOMs and APIs**

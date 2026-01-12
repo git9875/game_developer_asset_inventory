@@ -94,14 +94,14 @@ async function getProductUrls(productId) {
 
 async function iterateOrderHistoryPages() {
   let pageQuery = '?limit=10';
+  let apiUrl = 'https://www.daz3d.com/sales/order/history' + pageQuery;
   let orderNumber = 1, i = 0;
 
   // assemble Order Page URLs
   if (orderUrls.length == 0) {
-    while (pageQuery) {
+    while (apiUrl) {
       if (!allowedToParse) { break; }
-      const apiUrl = 'https://www.daz3d.com/sales/order/history';
-      const response = await fetch(apiUrl + pageQuery);
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
         console.error(`(${store}) HTTP error! status: ${response.status}, ` + apiUrl);
@@ -115,7 +115,7 @@ async function iterateOrderHistoryPages() {
       const htmlString = await response.text();
       const domParser = new DOMParser();
       const doc = domParser.parseFromString(htmlString, 'text/html');
-      pageQuery = parseOrderHistory(doc, orderUrls);
+      apiUrl = parseOrderHistory(doc, orderUrls);
 
       if (totalOrders === 0) {
         totalOrders = parsePagerTotalOrders(doc);
