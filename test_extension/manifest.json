@@ -70,9 +70,7 @@
   ],
 
   "permissions": [
-    "cookies",
     "activeTab",
-    "storage",
     "downloads",
     "tabs"
   ],

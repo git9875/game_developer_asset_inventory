@@ -16,7 +16,7 @@ Also, web requests are throttled syncronously at half a second to prevent sendin
 
 ## Preferred Installation through Browser Extension Listings
 The preferred way for you to install this is through the browser extension sites:
-- [Firefox Addon](https://addons.mozilla.org/en-US/firefox/extensions/)
+- [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)
 - [Chrome](https://chromewebstore.google.com/category/extensions)
 - [Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)
 
