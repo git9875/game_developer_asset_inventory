@@ -131,24 +131,19 @@ To install the test extension, see [Developer Installation](#developer-intallati
 
 The test pop-up is similar to the inventory pop-up, except that the progress bar represents pass percentage. The number of tests varies, depending on loops, because the tests iterate over rows of tables from various order pages, and the number of iterations are limited so that hundreds of redundant tests don't show up in the test viewer. A small message "DONE" will appear after the percentage message in the pop-up when the test run is complete.
 
-#### TODO: most tests have not been implemented yet.
-Completed tests so far:
-- [x] 3D Shards
-- [x] CGTrader
-- [x] Daz3D
-- [x] Fab Quixel
-- [x] Fab Unreal
-- [ ] Gumroad
-- [ ] Kitbash3D
-- [ ] Leartes Studios
-- [ ] Ovani Sound
-- [ ] RenderHub
-- [ ] Blender (Super Hive)
-- [ ] Synty Studios
-- [ ] TurboSquid
-- [ ] Unity Asset Store
-
 In the Test Viewer page, the records are in reverse order to show the latest tests first. The Group Timestamp column represents a test run on a group of tests on a page (game asset store). The dark gray row is a visual separator of test runs.
+
+
+## Technical Summary
+To be transparent and readily available to inspect, this project uses vanilla JavaScript without any frameworks and without webpacking and minifying. The only minified code comes from a third party library (ExcelJS) that is commonly used for exporting data to MS Excel spreadsheets.
+
+The actual extension (in src directory) and the test extension (in test_extension directory) have a very similar structure, and that's on purpose. The background directory contains code for the service worker (`background.js`), the IndexedDB CRUD scripts (db.mjs), and record viewer (`dbviewer.*` and `testviewer.*`) and export dialog. The contents_scripts directory contains the code that is loaded on each of the asset store pages to parse and extract the data from and then pass data to the service worker. The popup directory contains the small visual form (`run_inventory.*`) that contains the controls for opening the record viewer, selecting the web pages to navigate to, and starting/stopping the parsing scripts.
+
+The content_scripts query the HTML DOM and parse HTML to get data from various elements. It will also call the same APIs that the web pages send requests to. When there are GraphQL API requests, the requested data is much more limited in scope (to order history and product details) than the requests made by the asset store scripts, which request too much data, IMO. These requests are only queries for limited data. They do not perform unwanted actions.
+
+The database script `db.mjs` stores data within the browser's IndexedDB database. It performs record inserts and queries, but no updates. The test viewer has a button call a DB function that deletes all test records so you can start over and remove old test records that you don't need anymore.
+
+Notice that in the background and popup directories, the HTML, JS, and CSS files are separated. Inline scripting is prohibited in browser extensions. The background scripts load ES6 module scripts (db.mjs and the exporters). The `exporters/excel.mjs` script contains minified code copied from the [ExcelJS project](https://github.com/exceljs/exceljs). This was done out of practicality and to avoid having to use webpack on this whole project. I wanted to keep this project's code unpacked and unminified.
 
 
 ----
