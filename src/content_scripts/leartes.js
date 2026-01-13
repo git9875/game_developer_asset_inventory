@@ -42,7 +42,7 @@ async function inventoryApi(page, authToken) {
   });
   
   if (!response.ok) {
-    console.error(`${store} HTTP error! status: ${response.status}`);
+    console.error(`(${store}) HTTP error! status: ${response.status}`);
     return null;
   }
   
@@ -56,7 +56,7 @@ async function inventoryApi(page, authToken) {
     const url = 'https://cosmos.leartesstudios.com/' + environmentTypeUrlPart + '/' + item['slug'];
     const imgUrl = item['cover_image']['url'];
     const title = item['title'];
-    const tags = item['tags'];
+    const tags = ('tags' in item) ? item['tags'] : null;
     const category = item['type'];
     const publisher = store;
     const orderId = '';

@@ -65,7 +65,7 @@ async function mainParsing() {
 
         const subItemUrl = subItemLink.href;
         const subItemImgUrl = subItem.querySelector('img').src;
-        const subFirstItem = subItem.querySelector('div')
+        const subFirstItem = subItem.querySelector('div');
         const subItemTitle = subFirstItem.querySelector('div').textContent;
         const publisher = subFirstItem.querySelector('span a').textContent;
         const purchaseDate = '';

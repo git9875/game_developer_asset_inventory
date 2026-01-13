@@ -35,7 +35,7 @@ async function mainParsing() {
 
     const itemDownloads = order.querySelectorAll('.ItemDownloads');
     if (!itemDownloads) {
-      continue
+      continue;
     }
 
     for (const downloadItem of itemDownloads) {

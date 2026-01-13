@@ -119,7 +119,7 @@ async function graphQlRequestOrderDetails(urlOrderId, accessToken, pageNumber, t
   const order = result['data']['order'];
 
   if (order['fulfillmentStatus'] != 'FULFILLED') {
-    console.warn(`Order ${orderId} is not fulfilled yet.`);
+    console.warn(`Order ${urlOrderId} is not fulfilled yet.`);
     return;
   }
 
