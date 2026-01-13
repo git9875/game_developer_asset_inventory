@@ -27,3 +27,4 @@ button { padding:5px; }
 .passed { color: green; font-weight: bold; }
 .failed { color: red; font-weight: bold; }
 .blank-row { height: 40px; background-color: #555; }
+#delete-all-tests-btn { float:right; }

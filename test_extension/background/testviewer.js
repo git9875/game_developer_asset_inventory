@@ -133,6 +133,22 @@ document.getElementById('rowsPerPage').addEventListener('change', (e) => {
 document.getElementById('store-select').addEventListener('change', handleStoreFilterChange);
 document.getElementById('load-data-button').addEventListener('click', handleStoreFilterChange);
 
+document.getElementById('delete-all-tests-btn').addEventListener('click', async () => {
+    const confirmation = confirm("Are you sure you want to delete ALL test records from the database? This action cannot be undone.");
+    
+    if (confirmation) {
+        await indb.deleteAllTests(db);
+        currentData = [];
+        filteredData = [];
+        currentPage = 1;
+        itemCount = 0;
+        totalPages = 1;
+        renderTable();
+        renderPagination();
+        document.getElementById('pagination-summary').innerHTML = `Total items: <b>0</b>. Total pages: <b>0</b>.`;
+        alert("All test records have been deleted.");
+    }
+});
 
 
 async function handleStoreFilterChange() {
