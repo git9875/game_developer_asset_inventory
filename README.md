@@ -81,7 +81,7 @@ To start with, it may tell you "Can't get inventory from this page. Try a differ
 
 When you are on a valid page that it can access the asset store, close and open the popup again so it will refresh. You will see a button labeled "Start Gathering Inventory". Click it it and it will start running.
 
-![button to start gathering inventory](screenshots/popup_default.png)
+![button to start gathering inventory](screenshots/popup_valid_page.png)
 
 It may take a little while to get running, depending on the site. The progress bar will give you an indication of how long it will take till it completes. If after a long while it does not even start, click the Reset button and refresh the web page. Close and open the extension popup, and click the "Start Gathering Inventory" button again. If it does not work, then there might be an error. You can submit an [issue through this Github page](https://github.com/git9875/game_developer_asset_inventory/issues). When this is complete, and you want to go to a different page, click the Reset button and the page selector dropdown will display again.
 Note: web requests are throttled syncronously at half a second to prevent sending too many requests too quickly.

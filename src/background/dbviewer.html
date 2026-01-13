@@ -67,7 +67,7 @@
         <div id="pagination-summary"></div>
 
         <dialog id="exporter-dialog">
-            <button id="close-exporter-dialog-btn">X</button>
+            <button id="close-exporter-dialog-btn">x</button>
             <form id="exporter-form">
                 <h2>Export Data</h2>
                 <p>This will export according to filters on the table, except for pagination.</p>
@@ -83,8 +83,8 @@
                         </select>
                     </div>
 
-                    <div class="exporter-column">
-                        <label for="exporter-rows-split-select">Split files by (pagination):</label>
+                    <div class="exporter-column" id="exporter-column-split-files">
+                        <label for="exporter-rows-split-select">Split files by<br />(pagination): </label>
                         <select id="exporter-rows-split-select">
                             <option value="100000000">-- No Split --</option>
                             <option value="100">100 rows</option>
@@ -97,8 +97,8 @@
                 <div id="exporter-dialog-buttons">
                     <button type="button" id="export-all-btn">Export All Rows</button>
                     <button type="button" id="close-exporter-dialog-btn2">Close</button>
-                    <p id="export-info"></p>
                 </div>
+                <p id="export-info"></p>
                 <div id="export-btns-wrapper"></div>
             </form>
         </dialog>
