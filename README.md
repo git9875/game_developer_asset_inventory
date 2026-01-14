@@ -17,7 +17,7 @@ Also, web requests are throttled syncronously at half a second to prevent sendin
 ## Preferred Installation through Browser Extension Listings
 The preferred way for you to install this is through the browser extension sites:
 
-| [![Firefox Icon](screenshots/firefox_browser_logo_icon_152991.webp)](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)<br>[Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/) | [![Chrome Icon](screenshots/chrome_browser_icon_157328.webp.webp)](https://chromewebstore.google.com/category/extensions)<br>[Chrome](https://chromewebstore.google.com/category/extensions) | [![Edge Icon](screenshots/edge_browser_logo_icon_152998.webp)](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br>[Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home) |
+| [![Firefox Icon](screenshots/firefox_browser_logo_icon_152991.webp)](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)<br>[Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/) | [![Chrome Icon](screenshots/chrome_browser_icon_157328.webp)](https://chromewebstore.google.com/category/extensions)<br>[Chrome](https://chromewebstore.google.com/category/extensions) | [![Edge Icon](screenshots/edge_browser_logo_icon_152998.webp)](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br>[Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home) |
 |------|------|------|
 
 
