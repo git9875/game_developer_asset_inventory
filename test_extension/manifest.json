@@ -1,9 +1,9 @@
 {
-  "name": "Game Developer Assets Inventory",
+  "name": "GDAI Test Extension",
   "manifest_version": 3,
-  "version": "1.0.4",
+  "version": "1.0.5",
 
-  "description": "Extracts basic product item data from a user's order history in game developer stores to view and export to their local storage.",
+  "description": "This is a test extension for the official Game Developer Assets Inventory browser extension. Validates HTML DOM queries and API requests for supported game developer stores.",
 
   "icons": {
     "48": "icons/inventory_3d_objects_icon_48.png",
