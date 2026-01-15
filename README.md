@@ -9,6 +9,8 @@ I realize that people will have concerns about a browser extension that gets the
 
 Within this repository, `src` is the code for the actual browser extension. `test_extension` is used to [test DOM and API queries](#testing).
 
+**Uninstalling the extension will delete all of the data (collected by this extension) that it has stored in your browser's database. You can save this data before uninstalling the extension by using the exporter in the [DB Viewer](#db-viewer).**
+
 ## Note to Official Asset Store Personnel
 This browser extension provides a tool for the user, your users. I do not collect any information from them, nor do I profit from this. Their data is stored within their browser database. The extension only gathers minimal data available on the asset store websites that will be helpful to them. See the [DB Viewer](#db-viewer) table that shows what information is collected.
 
@@ -17,7 +19,7 @@ Also, web requests are throttled syncronously at half a second to prevent sendin
 ## Preferred Installation through Browser Extension Listings
 The preferred way for you to install this is through the browser extension sites:
 
-| [![Firefox Icon](screenshots/firefox_browser_logo_icon_152991.webp)](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)<br>[Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/) | [![Chrome Icon](screenshots/chrome_browser_icon_157328.webp)](https://chromewebstore.google.com/category/extensions)<br>[Chrome](https://chromewebstore.google.com/category/extensions) | [![Edge Icon](screenshots/edge_browser_logo_icon_152998.webp)](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br>[Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home) |
+| [![Firefox Icon](screenshots/firefox_browser_logo_icon_152991.webp)](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)<br>[Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/) | [![Chrome Icon](screenshots/chrome_browser_icon_157328.webp)](https://chromewebstore.google.com/detail/game-developer-assets-inv/molejkokkmibhlnkgclonaofbgklfcfk)<br>[Chrome](https://chromewebstore.google.com/detail/game-developer-assets-inv/molejkokkmibhlnkgclonaofbgklfcfk) | [![Edge Icon](screenshots/edge_browser_logo_icon_152998.webp)](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br>[Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br> Still awaiting approval |
 |------|------|------|
 
 
