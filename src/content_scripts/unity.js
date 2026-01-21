@@ -3,6 +3,8 @@ const store = 'Unity';
 const sleepMilliseconds = 500;
 let allowedToParse = false;
 let productIndex = 0;
+const tagFilterList = ['fbx', 'jpg', 'adobe', 'illustator', 'general', 'cs', 'graphic', 'and', 'png', 'ai', 'svg', 'coreldraw', 'age', 'cdr', 'eps', 'psd', 'photoshop', 'ui', 'x', 'psds', 'pngs', 'cc', 'item', 'obj', 'blender', 'model', 'art', 'wav', 'massive', 'various', 'game', 'big', 'multi', 'genre', 'audition', 'ogg', 'pro', 'complete', 'minimalist', 'interface', 'top', 'down', 'inkscape', 'super', 'eps', 'volume', 'mtl', 'max', 'tga', 'set', 'zbrush', 'substance', 'unitypackage', 'post', 'painter', 'maya', 'the', 'lsdj', 'sid', 'game'];
+
 
 browserAPI.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // console.log(`(${store}) Message from the background script:`, request.command);
@@ -117,7 +119,7 @@ async function parseLibraryAssets(startIdx, oldAssetCount) {
     else {
       // this is a tags info response
       const tagsArray = resultProduct['popularTags'];
-      products[productId]['tags'] = tagsArray.map(tagObj => tagObj['name'].toLowerCase());
+      products[productId]['tags'] = tagsArray.map(tagObj => tagObj['name'].toLowerCase()).filter(tag => !tagFilterList.includes(tag) && tag.length > 1);
       currentAssets[ products[productId]['url'] ] = products[productId];
     }
   }

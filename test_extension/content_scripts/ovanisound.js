@@ -265,6 +265,13 @@ async function getDownloadDetailsProductListings(downloadDetailsUrl, assetsByTit
     const doc = new DOMParser().parseFromString(downloadsHtmlStr, 'text/html');
     let i = 1;
     const productItems = doc.querySelectorAll('#MainContent .dda-order__item');
+    if (productItems.length === 0) {
+      sendTestResultMessage("getDownloadDetailsProductListings(): find product rows", false, `No product rows found in the order.`);
+      return;
+    }
+    else if (i < iterationLimitPerTest) {
+      sendTestResultMessage("getDownloadDetailsProductListings(): find product rows", true, `Found ${productItems.length} product rows in the order.`);
+    }
 
     for (const item of productItems) {
         const title = item.querySelector('.dda-order__item-name').textContent.trim();

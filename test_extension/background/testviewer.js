@@ -15,7 +15,7 @@ let isMultiPage = false;
 
 
 // keep this list in sync with popup/run_inventory.js
-const storeNames = [ "3D Shards", "CGTrader", "Daz3D", "Fab Quixel Megascans", "Fab Unreal", "Gumroad", "KitBash3d", "Leartes Studios", "Ovani Sound", "RenderHub", "Blender", "Synty", "TurboSquid", "Unity" ];
+const storeNames = [ "3D Shards", "CGTrader", "Daz3D", "Fab Quixel Megascans", "Fab Unreal", "GameDev Market", "Gumroad", "KitBash3d", "Leartes Studios", "Ovani Sound", "RenderHub", "Blender", "Synty", "TurboSquid", "Unity" ];
 
 
 function applyFilter() {

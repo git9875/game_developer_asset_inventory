@@ -1,7 +1,7 @@
 {
   "name": "GDAI Test Extension",
   "manifest_version": 3,
-  "version": "1.0.5",
+  "version": "1.0.6",
 
   "description": "This is a test extension for the official Game Developer Assets Inventory browser extension. Validates HTML DOM queries and API requests for supported game developer stores.",
 
@@ -30,6 +30,10 @@
     {
       "matches": ["https://www.fab.com/sellers/Quixel%20Megascans*"],
       "js": ["content_scripts/fab_quixel.js"]
+    },
+    {
+      "matches": ["https://www.gamedevmarket.net/user/orders*"],
+      "js": ["content_scripts/gamedevmarket.js"]
     },
     {
       "matches": ["https://gumroad.com/library*"],
@@ -86,7 +90,7 @@
     "default_popup": "popup/run_inventory.html"
   },
   "background": {
-    "service_worker": "background/background.js",
+    "scripts": ["background/background.js"],
     "type": "module"
   },
   "web_accessible_resources": [

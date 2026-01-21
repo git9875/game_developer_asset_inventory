@@ -152,6 +152,7 @@ const availablePages = [
     { label:"Daz3D", url:"https://www.daz3d.com/sales/order/history" },
     { label:"FAB Unreal", url:"https://www.fab.com/library" },
     { label:"FAB Quixel Megascans", url:"https://www.fab.com/sellers/Quixel%20Megascans" },
+    { label:"GameDev Market", url:"https://www.gamedevmarket.net/user/orders" },
     { label:"Gumroad", url:"https://gumroad.com/library" },
     { label:"Kitbash3D", url:"https://cargo-app.kitbash3d.com/account/my-assets" },
     { label:"Leartes Studio", url:"https://cosmos.leartesstudios.com/inventory" },

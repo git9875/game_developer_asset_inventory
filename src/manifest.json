@@ -1,7 +1,7 @@
 {
   "name": "Game Developer Assets Inventory",
   "manifest_version": 3,
-  "version": "1.0.5",
+  "version": "1.0.6",
 
   "description": "Extracts basic product item data from a user's order history in game developer stores to view and export to their local storage.",
 
@@ -30,6 +30,10 @@
     {
       "matches": ["https://www.fab.com/sellers/Quixel%20Megascans*"],
       "js": ["content_scripts/fab_quixel.js"]
+    },
+    {
+      "matches": ["https://www.gamedevmarket.net/user/orders*"],
+      "js": ["content_scripts/gamedevmarket.js"]
     },
     {
       "matches": ["https://gumroad.com/library*"],
@@ -99,5 +103,15 @@
       ],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@game_developer_asset_inventory",
+      "strict_min_version": "146.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
 }
