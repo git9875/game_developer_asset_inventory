@@ -19,13 +19,10 @@ Also, web requests are throttled syncronously at half a second to prevent sendin
 ## Preferred Installation through Browser Extension Listings
 The preferred way for you to install this is through the browser extension sites:
 
-| [![Firefox Icon](screenshots/firefox_browser_logo_icon_152991.webp)](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)<br>[Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/) | [![Chrome Icon](screenshots/chrome_browser_icon_157328.webp)](https://chromewebstore.google.com/detail/game-developer-assets-inv/molejkokkmibhlnkgclonaofbgklfcfk)<br>[Chrome](https://chromewebstore.google.com/detail/game-developer-assets-inv/molejkokkmibhlnkgclonaofbgklfcfk) | [![Edge Icon](screenshots/edge_browser_logo_icon_152998.webp)](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br>[Edge](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)<br> Still awaiting approval |
-|------|------|------|
+| [![Firefox Icon](screenshots/firefox_browser_logo_icon_152991.webp)](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/)<br>[Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/game-developer-asset-inventory/) | [![Chrome Icon](screenshots/chrome_browser_icon_157328.webp)](https://chromewebstore.google.com/detail/game-developer-assets-inv/molejkokkmibhlnkgclonaofbgklfcfk)<br>[Chrome](https://chromewebstore.google.com/detail/game-developer-assets-inv/molejkokkmibhlnkgclonaofbgklfcfk) |
+|------|------|
 
-
-The Safari browser will NOT get this extension in their App Store since it requires conversion to Swift code. However, through the Safari browser developer options, you can <a href="https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension#Temporarily-install-a-web-extension-folder-in-macOS-Safari">install it manually and temporarily</a>.
-
-#### TODO: update direct extension links when extensions are approved.
+Safari and Edge browsers will not be supported for [these reasons](#browsers-not-supported).
 
 
 ## Developer Intallation
@@ -169,3 +166,13 @@ Code research aided by Google Gemini. Code completion and suggestions provided b
 ## Links
 - [Official Page on Vintillect website](https://vintillect.com/game_developer_asset_inventory/)
 - [Privacy Policy](https://vintillect.com/game_developer_asset_inventory/privacy.html)
+
+## Browsers Not Supported
+The Safari browser will NOT get this extension in their App Store since it requires conversion to Swift code. However, through the Safari browser developer options, you can <a href="https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension#Temporarily-install-a-web-extension-folder-in-macOS-Safari">install it manually and temporarily</a>.
+
+The Microsoft Edge browser will not be supported for these reasons:
+- It requires partnership agreements before browser extensions can be approved.
+- Microsoft is a trillion dollar multinational company, but it can't put more than a few dollars into fixing it's limited SharePoint-based forms for registering partners.
+- It does not seem to allow organizations or people that aren't businesses.
+- Its customer support does not operate outside the hours of 4 am and 8 am PST.
+- The customer support representative (Microsoft Vetting Operations Tracking ID 2601150010000519) ignores the description of the problem and all my replies, and keeps reading from a script like a bot, even though it says that Account support is handled by an actual human. I'm sure this is a person in India because of the hours of the poor responses.
