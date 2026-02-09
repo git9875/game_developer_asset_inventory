@@ -153,8 +153,12 @@ async function externalPurchasesParsing() {
   });
 
   if (response.status !== 200) {
-    console.warn(`Failed to fetch product page: ${url}, status code: ${response.status}`);
+    console.warn(`Failed to fetch external purchases page: ${externalPurchasesUrl}, status code: ${response.status}`);
+    sendTestResultMessage("externalPurchasesParsing(): fetch external purchases page", false, `Failed to fetch external purchases page from ${externalPurchasesUrl} . HTTP status: ${response.status}`);
     return null;
+  }
+  else if (currentPage < iterationLimitPerTest) {
+    sendTestResultMessage("externalPurchasesParsing(): fetch external purchases page", true, `Successfully fetched external purchases page from ${externalPurchasesUrl}`);
   }
 
   const pageText = await response.text();
@@ -240,12 +244,12 @@ async function parseProductPage(url) {
 
   if (response.status !== 200) {
     console.warn(`Failed to fetch product page: ${url}, status code: ${response.status}`);
-      sendTestResultMessage("parseProductPage(): fetch product details page", false, `Failed to fetch product from ${url} . HTTP status: ${response.status}`);
-      return null;
-    }
-    else {
-      sendTestResultMessage("parseProductPage(): fetch product details page", true, `Successfully fetched product from ${url} . HTTP status: ${response.status}`);
-    }
+    sendTestResultMessage("parseProductPage(): fetch product details page", false, `Failed to fetch product from ${url} . HTTP status: ${response.status}`);
+    return null;
+  }
+  else {
+    sendTestResultMessage("parseProductPage(): fetch product details page", true, `Successfully fetched product from ${url} . HTTP status: ${response.status}`);
+  }
 
   const pageText = await response.text();
   const parser = new DOMParser();
@@ -264,17 +268,32 @@ async function parseProductPage(url) {
     sendTestResultMessage("parseProductPage(): find publisher", true, `Product row contains publisher.`);
   }
 
-
-  const category = doc.querySelector('header.main-nav + script + div').textContent.trim();
-  const publisher = doc.querySelector('form[action="/user/follow"] input[name="username"]').value;
-  const tagItems = doc.querySelectorAll('div.product-tags li');
-  const tags = [];
-  if (tagItems.length === 0) {
-    sendTestResultMessage("parseProductPage(): find tags", false, `No tags found on the product page.`);
+  if (doc.querySelectorAll('header.main-nav + script + div').length === 0) {
+    sendTestResultMessage("parseProductPage(): find breadcrumb links", false, `No breadcrumb links found in the product details.`);
     return;
   }
   else {
-    sendTestResultMessage("parseProductPage(): find tags", true, `Found ${tagItems.length} tags on the product page.`);
+    sendTestResultMessage("parseProductPage(): find breadcrumb links", true, `Found breadcrumb links in the product details.`);
+  }
+  const category = doc.querySelector('header.main-nav + script + div').textContent.trim();
+
+  const publisherElem = doc.querySelector('form[action="/user/follow"] input[name="username"]');
+  if (!publisherElem) {
+    sendTestResultMessage("parseProductPage(): find publisher", false, `Product details missing publisher.`);
+  }
+  else {
+    sendTestResultMessage("parseProductPage(): find publisher", true, `Product details contains publisher.`);
+  }
+  const publisher = publisherElem.value;
+  
+  const tagItems = doc.querySelectorAll('div.product-tags li');
+  const tags = [];
+  if (tagItems.length === 0) {
+    sendTestResultMessage("parseProductPage(): find tags", false, `No tags found on the product details page.`);
+    return;
+  }
+  else {
+    sendTestResultMessage("parseProductPage(): find tags", true, `Found ${tagItems.length} tags on the product details page.`);
   }
 
   for (const tagItem of tagItems) {
