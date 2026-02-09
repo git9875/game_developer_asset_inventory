@@ -231,6 +231,7 @@ async function parseLibraryAssets(startIdx, oldAssetCount) {
     else {
       if (!('popularTags' in resultProduct) || !Array.isArray(resultProduct['popularTags']) || resultProduct['popularTags'].length === 0) {
         sendTestResultMessage("mainParsing(): validate popularTags presence", false, `No popular tags found for product ID ${productId}, index ${i}.`);
+        console.warn(`(${store}) No popular tags found for product`, resultProduct);
         continue;
       }
       else if (i <= iterationLimitPerTest) {
