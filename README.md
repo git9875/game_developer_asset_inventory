@@ -59,6 +59,7 @@ These are the game developer asset sites for which you can import your order/ass
 - [Fab Unreal](https://www.fab.com)
 - [Fab Quixel Megascans](https://www.fab.com/sellers/Quixel%20Megascans)
 - [GameDev Market](https://www.gamedevmarket.net)
+- [Godot Marketplace](https://godotmarketplace.com)
 - [Gumroad](https://gumroad.com)
 - [KitBash3d](https://cargo-app.kitbash3d.com)
 - [Leartes Studios](https://cosmos.leartesstudios.com)
