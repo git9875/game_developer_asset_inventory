@@ -97,7 +97,7 @@ async function parseFabAssetsFromHtml() {
   const jsonStr = document.getElementById('js-json-data-prefetched-data').innerHTML;
   const data = JSON.parse(jsonStr);
 
-  if (!("/i/library/entitlements/search?sort_by=-createdAt" in data)) {
+  if (!("/i/library/search?sort_by=-createdAt&source=acquired" in data)) {
     sendTestResultMessage("parseFabAssetsFromHtml(): validate JSON data structure", false, `Missing expected key in JSON data.`);
     return 0;
   }
@@ -105,14 +105,14 @@ async function parseFabAssetsFromHtml() {
     sendTestResultMessage("parseFabAssetsFromHtml(): validate JSON data structure", true, `Found expected key in JSON data.`);
   }
 
-  const mainListings = data["/i/library/entitlements/search?sort_by=-createdAt"]; // from HTML only
+  const mainListings = data["/i/library/search?sort_by=-createdAt&source=acquired"]; // from HTML only
   const nextCursor = parseFabRelevantDataFromFabJson(mainListings);
   return nextCursor;
 }
 
 
 async function parseFabAssetsFromFetchJson(thisCursor) {
-  const apiUrl = 'https://www.fab.com/i/library/entitlements/search?sort_by=-createdAt&cursor=' + thisCursor;
+  const apiUrl = 'https://www.fab.com/i/library/search?sort_by=-createdAt&source=acquired&cursor=' + thisCursor;
   const response = await fetch(apiUrl);
 
   if (!response.ok) {
@@ -145,54 +145,32 @@ async function parseFabRelevantDataFromFabJson(mainListings) {
   let i = 1;
 
   for (const item of results) {
-    if (!('listing' in item) || !('medias' in item['listing'])) {
-      sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item media", false, `Missing media in item.`);
-      continue;
+    if (!('listing' in item) || !('thumbnails' in item['listing'])) {
+      sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item thumbnails", false, `Missing thumbnails in item.`);
     }
     else if (i < iterationLimitPerTest) {
-      sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item media", true, `Found media in item.`);
+      sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item thumbnails", true, `Found thumbnails in item.`);
     }
 
     // get thumbnail image
-    const mediaThumbnailPackage = item['listing']['medias'].filter(m => m.type == 'image');
     let imgUrl = null;
 
-    if (mediaThumbnailPackage && mediaThumbnailPackage.length > 0) {
-      if (!('images' in mediaThumbnailPackage[0])) {
-        sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate mediaThumbnailPackage images", false, `Missing images in mediaThumbnailPackage.`);
-        continue;
-      }
-      else if (i < iterationLimitPerTest) {
-        sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate mediaThumbnailPackage images", true, `Found images in mediaThumbnailPackage.`);
-      }
-
-      const mediaThumbnails = mediaThumbnailPackage[0]['images'].filter(m => m.width == 320);
-      if (mediaThumbnails && mediaThumbnails.length > 0) {
-        imgUrl = mediaThumbnails[0].url;
+    const thumbnailMedia = item['listing']['thumbnails'][0];
+    if (thumbnailMedia['type'] == 'thumbnail' && thumbnailMedia['images']) {
+      const thumbnailImages = thumbnailMedia['images'].filter(m => m.width == 320);
+      if (thumbnailImages && thumbnailImages.length > 0) {
+        imgUrl = thumbnailImages[0].url;
       }
     }
-
     if (!imgUrl) {
-      if (!('listing' in item) || !('thumbnails' in item['listing'])) {
-        sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item thumbnails", false, `Missing thumbnails in item.`);
-      }
-      else if (i < iterationLimitPerTest) {
-        sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item thumbnails", true, `Found thumbnails in item.`);
-      }
-    }
-
-    if (!imgUrl && item['listing']['thumbnails'] && item['listing']['thumbnails'].length > 0) {
-      imgUrl = item['listing']['thumbnails'][0]['mediaUrl']; // use the default image if there isn't a better image
-    }
-
-    if (!imgUrl) {
-      sendTestResultMessage("parseFabRelevantDataFromFabJson(): find imgUrl", false, `Missing imgUrl in mediaThumbnails.`);
+      // imgUrl = thumbnailMedia['mediaUrl']; // use the default image if there isn't a better image
+      sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate thumbnail image width=320", false, `Missing thumbnail image with width=320 in item.`);
     }
     else if (i < iterationLimitPerTest) {
-      sendTestResultMessage("parseFabRelevantDataFromFabJson(): find imgUrl", true, `Found imgUrl in mediaThumbnails.`);
+      sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate thumbnail image width=320", true, `Found thumbnail image with width=320 in item.`);
     }
 
-    if (!('listing' in item) || !(('tags' in item['listing']) && ('title' in item['listing']) && ('uid' in item['listing']) && ('user' in item['listing']) && ('sellerName' in item['listing']['user']) && ('createdAt' in item))) {
+    if (!('listing' in item) || !('title' in item['listing']) || !('uid' in item['listing']) || !('publisher' in item['listing']) || !('sellerName' in item['listing']['publisher']) || !('createdAt' in item)) {
       console.warn(`(${store}) Incomplete item data:`, item);
       sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item structure", false, `Missing data in item.`);
       continue;
@@ -201,13 +179,22 @@ async function parseFabRelevantDataFromFabJson(mainListings) {
       sendTestResultMessage("parseFabRelevantDataFromFabJson(): validate item structure", true, `Valid item structure.`);
     }
 
-    const tags = item['listing']['tags'].map((t) => t.slug);
     const title = item['listing']['title'];
     const url = 'https://www.fab.com/listings/' + item['listing']['uid'];
-    const publisher = item['listing']['user']['sellerName'];
+    const publisher = item['listing']['publisher']['sellerName'];
     const purchaseDate = item['createdAt'].substring(0,10); // only get the date from the timestamp
     const orderId = '';
-    const product = {'url':url, 'imgUrl':imgUrl, 'title':title, 'publisher':publisher, 'category':null, 'tags':tags, 'orderId':orderId, 'purchaseDate':purchaseDate, 'assetStore':store};
+
+    let tags = null;
+    let category = null;
+
+    if (i < iterationLimitPerTest) {
+      const tagsAndCategory = await getTagsAndCategory(item['listing']['uid']);
+      tags = tagsAndCategory.tags;
+      category = tagsAndCategory.category;
+    }
+
+    const product = {'url':url, 'imgUrl':imgUrl, 'title':title, 'publisher':publisher, 'category':category, 'tags':tags, 'orderId':orderId, 'purchaseDate':purchaseDate, 'assetStore':store};
     currentAssets[url] = product;
 
     i += 1;
@@ -268,4 +255,38 @@ async function setUnrealTotalCount() {
 
   totalCount += data['aggregations']['categoryPerListingType']['othersCount'];
   itemTotal = totalCount;
+}
+
+
+async function getTagsAndCategory(listingId) {
+  const apiUrl = 'https://www.fab.com/i/listings/' + listingId;
+  const response = await fetch(apiUrl);
+
+  if (!response.ok) {
+    sendTestResultMessage("getTagsAndCategory(): fetch listing tags and category", false, `Failed to fetch tags and category data from ${apiUrl}. HTTP status: ${response.status}`);
+    console.error(`Fab HTTP error! status: ${response.status}`);
+    return null;
+  }
+
+  const data = await response.json();
+  if (!data['tags']) {
+    sendTestResultMessage("getTagsAndCategory(): validate listing tags", false, `Missing tags in listing data from ${apiUrl}.`);
+    return null;
+  }
+  else {
+    sendTestResultMessage("getTagsAndCategory(): validate listing tags", true, `Found tags in listing data from ${apiUrl}.`);
+  }
+
+  if (!data['category']) {
+    sendTestResultMessage("getTagsAndCategory(): validate listing category", false, `Missing category in listing data from ${apiUrl}.`);
+    return null;
+  }
+  else {
+    sendTestResultMessage("getTagsAndCategory(): validate listing category", true, `Found category in listing data from ${apiUrl}.`);
+  }
+
+  const tags = data['tags'].map((t) => t.slug);
+  const category = data['category'] ? data['category'].slug : null;
+  sendTestResultMessage("getTagsAndCategory(): fetch listing tags and category", true, `Successfully fetched tags and category data from ${apiUrl}`);
+  return { tags, category };
 }

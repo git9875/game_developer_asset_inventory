@@ -41,13 +41,13 @@ async function mainFabUnrealParsing() {
 async function parseFabAssetsFromHtml() {
   const jsonStr = document.getElementById('js-json-data-prefetched-data').innerHTML;
   const data = JSON.parse(jsonStr);
-  const mainListings = data["/i/library/entitlements/search?sort_by=-createdAt"]; // from HTML only
+  const mainListings = data["/i/library/search?sort_by=-createdAt&source=acquired"]; // from HTML only
   const nextCursor = parseFabRelevantDataFromFabJson(mainListings);
   return nextCursor;
 }
 
 async function parseFabAssetsFromFetchJson(thisCursor) {
-  const apiUrl = 'https://www.fab.com/i/library/entitlements/search?sort_by=-createdAt&cursor=' + thisCursor;
+  const apiUrl = 'https://www.fab.com/i/library/search?sort_by=-createdAt&source=acquired&cursor=' + thisCursor;
   const response = await fetch(apiUrl);
 
   if (!response.ok) {
@@ -67,26 +67,28 @@ async function parseFabRelevantDataFromFabJson(mainListings) {
 
   for (const item of results) {
     // get thumbnail image
-    const mediaThumbnailPackage = item['listing']['medias'].filter(m => m.type == 'image');
     let imgUrl = null;
 
-    if (mediaThumbnailPackage && mediaThumbnailPackage.length > 0) {
-      const mediaThumbnails = mediaThumbnailPackage[0]['images'].filter(m => m.width == 320);
-      if (mediaThumbnails && mediaThumbnails.length > 0) {
-        imgUrl = mediaThumbnails[0].url;
+    if (item['listing']['thumbnails'] && item['listing']['thumbnails'].length > 0) {
+      const thumbnailMedia = item['listing']['thumbnails'][0];
+      if (thumbnailMedia['type'] == 'thumbnail' && thumbnailMedia['images']) {
+        const thumbnailImages = thumbnailMedia['images'].filter(m => m.width == 320);
+        if (thumbnailImages && thumbnailImages.length > 0) {
+          imgUrl = thumbnailImages[0].url;
+        }
+      }
+      if (!imgUrl) {
+        imgUrl = thumbnailMedia['mediaUrl']; // use the default image if there isn't a better image
       }
     }
-    if (!imgUrl && item['listing']['thumbnails'] && item['listing']['thumbnails'].length > 0) {
-      imgUrl = item['listing']['thumbnails'][0]['mediaUrl']; // use the default image if there isn't a better image
-    }
 
-    const tags = item['listing']['tags'].map((t) => t.slug);
     const title = item['listing']['title'];
     const url = 'https://www.fab.com/listings/' + item['listing']['uid'];
-    const publisher = item['listing']['user']['sellerName'];
+    const publisher = item['listing']['publisher']['sellerName'];
     const purchaseDate = item['createdAt'].substring(0,10); // only get the date from the timestamp
     const orderId = '';
-    const product = {'url':url, 'imgUrl':imgUrl, 'title':title, 'publisher':publisher, 'category':null, 'tags':tags, 'orderId':orderId, 'purchaseDate':purchaseDate, 'assetStore':store};
+    const { tags, category } = await getTagsAndCategory(item['listing']['uid']);
+    const product = {'url':url, 'imgUrl':imgUrl, 'title':title, 'publisher':publisher, 'category':category, 'tags':tags, 'orderId':orderId, 'purchaseDate':purchaseDate, 'assetStore':store};
     currentAssets[url] = product;
   }
 
@@ -127,4 +129,19 @@ async function setUnrealTotalCount() {
 
   totalCount += data['aggregations']['categoryPerListingType']['othersCount'];
   itemTotal = totalCount;
+}
+
+async function getTagsAndCategory(listingId) {
+  const apiUrl = 'https://www.fab.com/i/listings/' + listingId;
+  const response = await fetch(apiUrl);
+
+  if (!response.ok) {
+    console.error(`Fab HTTP error! status: ${response.status}`);
+    return null;
+  }
+
+  const data = await response.json();
+  const tags = data['tags'].map((t) => t.slug);
+  const category = data['category'] ? data['category'].slug : null;
+  return { tags, category };
 }
