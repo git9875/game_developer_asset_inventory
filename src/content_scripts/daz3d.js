@@ -124,7 +124,7 @@ function parseOrderHistory(doc, orderUrls) {
     orderUrls.push(url);
   }
 
-  const unFilteredPaginationLinks = doc.querySelectorAll('.pages-list a');
+  const unFilteredPaginationLinks = doc.querySelectorAll('#my-orders-table + .pager .pages-list a'); // pagination after the orders table
   if (unFilteredPaginationLinks.length == 0) {
     return null;
   }

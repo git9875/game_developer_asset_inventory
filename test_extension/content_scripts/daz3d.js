@@ -210,7 +210,7 @@ function parseOrderHistory(doc, orderUrls) {
     i += 1;
   }
 
-  const unFilteredPaginationLinks = doc.querySelectorAll('.pages-list a');
+  const unFilteredPaginationLinks = doc.querySelectorAll('#my-orders-table + .pager .pages-list a');
   if (unFilteredPaginationLinks.length == 0) {
     sendTestResultMessage("parseOrderHistory(): DOM query unfiltered pagination links", false, "No pagination links found on order history page.");
     return null;
