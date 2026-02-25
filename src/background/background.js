@@ -13,7 +13,7 @@ const maxConsecutiveDuplicates = 10; // if we see the same cursor this many time
 function sendMessageToContentScript(message) {
     getCurrentTabId().then((tabId) => {
         if (!tabId) {
-            console.error("(background) No active tab found.");
+            console.warn("(background) No active tab found.");
             return;
         }
 
@@ -65,14 +65,14 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if (assets.length > 0) {
                     indb.addMultipleAssets(db, assets).then((data) => {
                         // console.log(`(background) Added ${assets.length} assets to the database.`);
-                        if (data.duplicateCount > maxConsecutiveDuplicates && data.completed == 0) {
+                        if (data.duplicateCount > maxConsecutiveDuplicates && data.duplicateCount == data.completed) {
                             console.warn(`(background) Found ${data.duplicateCount} duplicate assets, stopping parsing.`);
                             session.percentDone = 100;
                             session.isComplete = true;
                             sendMessageToContentScript({ command: "STOP_PARSING", data: {} });
                         }
                     }).catch((error) => {
-                        console.error("(background) Error adding assets to the database:", error);
+                        console.warn("(background) Error adding assets to the database:", error);
                         // "Duplicate URL" error can be ignored
                     });
                 }
@@ -105,7 +105,7 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 // check if there is already a session for this tab
                 expireOldSessions();
                 if (tabId in tabSessions) {
-                    console.error(`(background) Session already exists for tab ${tabId}`);
+                    console.warn(`(background) Session already exists for tab ${tabId}`);
                     return;
                 }
                 else {
@@ -157,7 +157,7 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
 function handlePopupIsReadyMessage() {
     return browserAPI.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         if (tabs.length === 0) {
-            console.error("(background) No active tab found.");
+            console.warn("(background) No active tab found.");
             return;
         }
 
