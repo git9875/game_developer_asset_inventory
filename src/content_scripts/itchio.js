@@ -26,10 +26,6 @@ async function mainParsing() {
   const currentAssets = {};
 
   for (const item of itemDivs) {
-    if (! item.id) {
-      continue;
-    }
-
     const aElement = item.querySelector('a');
     if (! aElement) {
       console.warn('missing a href for item: ', item);
