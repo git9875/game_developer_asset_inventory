@@ -95,6 +95,7 @@ async function mainParsing() {
   let currentPage = 0;
   const receiptUrls = {};
   i = 1;
+  console.log("orderDict", orderDict);
 
   for (const url in orderDict) {
     if (!allowedToParse) { break; }
@@ -129,7 +130,7 @@ async function getReceiptUrl(orderUrl) {
 
     if (!response.ok) {
       if (response.status === 403) {
-        alert("Gumroad prevented script from accessing purchase data.\nClick on a purchased item (to verify you are human),\nreturn to this page, and try again.");
+        alert("Gumroad 403 response prevented script from accessing purchase data.\nClick on a purchased item (to verify you are human),\nreturn to this page, and try again.");
         sendTestResultMessage("getReceiptUrl(): fetch receipt page", false, `Gumroad returned 403 Forbidden for ${orderUrl}. User verification may be required.`);
         return null;
       }
@@ -141,15 +142,22 @@ async function getReceiptUrl(orderUrl) {
     
 
     const htmlString = await response.text();
-    const purchaseUrlStartIdx = htmlString.indexOf('https://gumroad.com/purchases/');
-    if (purchaseUrlStartIdx == -1) {
+    let encodedJsonStartIdx = htmlString.indexOf('id="app" data-page="');
+    if (encodedJsonStartIdx == -1) {
       alert("Gumroad prevented script from accessing purchase data.\nClick on a purchased item (to verify you are human),\nreturn to this page, and try again.");
       sendTestResultMessage("getReceiptUrl(): receipt page find purchase URL string", false, `Failed to parse receipt HTML from ${orderUrl}. User verification may be required.`);
       return null;
     }
     
-    const purchaseUrlEndIdx = htmlString.indexOf('"', purchaseUrlStartIdx);
-    const receiptUrl = htmlString.substring(purchaseUrlStartIdx, purchaseUrlEndIdx);
+    encodedJsonStartIdx += 20;
+    const encodedJsonEndIdx = htmlString.indexOf('"', encodedJsonStartIdx);
+    const htmlEncodedJson = htmlString.substring(encodedJsonStartIdx, encodedJsonEndIdx);
+    const decodedJsonString = htmlEncodedJson.replace(/&quot;/g, '"'); // Handle HTML entities
+    console.log('decodedJsonString', decodedJsonString);
+    const jsonData = JSON.parse(decodedJsonString);
+    let purchaseId = jsonData.props.purchase.bundle_purchase_id ? jsonData.props.purchase.bundle_purchase_id : jsonData.props.purchase.id;
+    const receiptUrl = 'https://gumroad.com/purchases/' + purchaseId + '/receipt?email=' + jsonData.props.purchase.email; // https://gumroad.com/purchases/lsdfsdfie==/receipt?email=test%40test.com
+    console.log("Parsed receipt URL:", receiptUrl);
     return receiptUrl;
 }
 

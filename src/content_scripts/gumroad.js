@@ -73,7 +73,7 @@ async function getReceiptUrl(orderUrl) {
 
     if (!response.ok) {
       if (response.status === 403) {
-        alert("Gumroad prevented script from accessing purchase data.\nClick on a purchased item (to verify you are human),\nreturn to this page, and try again.");
+        alert("Gumroad 403 response prevented script from accessing purchase data.\nClick on a purchased item (to verify you are human),\nreturn to this page, and try again.");
       }
 
       console.error(`${store} HTTP error! status: ${response.status}, ` + orderUrl);
@@ -81,20 +81,25 @@ async function getReceiptUrl(orderUrl) {
     }
 
     const htmlString = await response.text();
-    const purchaseUrlStartIdx = htmlString.indexOf('https://gumroad.com/purchases/');
-    if (purchaseUrlStartIdx == -1) {
+    let encodedJsonStartIdx = htmlString.indexOf('id="app" data-page="');
+    if (encodedJsonStartIdx == -1) {
       alert("Gumroad prevented script from accessing purchase data.\nClick on a purchased item (to verify you are human),\nreturn to this page, and try again.");
       return null;
     }
     
-    const purchaseUrlEndIdx = htmlString.indexOf('"', purchaseUrlStartIdx);
-    const receiptUrl = htmlString.substring(purchaseUrlStartIdx, purchaseUrlEndIdx);
+    encodedJsonStartIdx += 20;
+    const encodedJsonEndIdx = htmlString.indexOf('"', encodedJsonStartIdx);
+    const htmlEncodedJson = htmlString.substring(encodedJsonStartIdx, encodedJsonEndIdx);
+    const decodedJsonString = htmlEncodedJson.replace(/&quot;/g, '"'); // Handle HTML entities
+    const jsonData = JSON.parse(decodedJsonString);
+    let purchaseId = jsonData.props.purchase.bundle_purchase_id ? jsonData.props.purchase.bundle_purchase_id : jsonData.props.purchase.id;
+    const receiptUrl = 'https://gumroad.com/purchases/' + purchaseId + '/receipt?email=' + jsonData.props.purchase.email; // https://gumroad.com/purchases/lsdfsdfie==/receipt?email=test%40test.com
     return receiptUrl;
 }
 
 
 async function parsePurchaseReceiptPage(receiptUrl, currentPage, totalPages) {
-  const urlTokens = receiptUrl.split('/'); //    https://gumroad.com/purchases/XrsdflYAIW5NCUIIOLH69fQ==/receipt?email=test%40email.com
+  const urlTokens = receiptUrl.split('/'); //    https://gumroad.com/purchases/lsdfsdfie==/receipt?email=test%40test.com
   const orderId = urlTokens[4];
   // console.log(`(${store}) parsePurchaseReceiptPage Parsing receipt page: ` + receiptUrl);
   const response = await fetch(receiptUrl);
