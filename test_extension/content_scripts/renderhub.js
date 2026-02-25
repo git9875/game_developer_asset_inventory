@@ -92,15 +92,6 @@ async function mainParsing() {
       sendTestResultMessage("mainParsing(): validate asset item link", true, `Link found for asset item id ${item.id}, row ${i}.`);
     }
 
-    if (! item.querySelector('a')) {
-      console.warn('missing a href for item: ', item);
-      sendTestResultMessage("mainParsing(): validate asset item link", false, `No link found for asset item id ${item.id}, row ${i}.`);
-      return;
-    }
-    else if (i <= iterationLimitPerTest) {
-      sendTestResultMessage("mainParsing(): validate asset item link", true, `Link found for asset item id ${item.id}, row ${i}.`);
-    }
-
     const url = item.querySelector('a').href;
     const imgElement = item.querySelector('img');
     if (! imgElement) {
