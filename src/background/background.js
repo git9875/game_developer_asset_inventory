@@ -7,6 +7,8 @@ indb.openDatabase().then((database) => {
 
 const browserAPI = chrome || browser;
 let lastError = null;
+const maxConsecutiveDuplicates = 10; // if we see the same cursor this many times in a row, we will stop to avoid an infinite loop
+
 
 function sendMessageToContentScript(message) {
     getCurrentTabId().then((tabId) => {
@@ -61,8 +63,14 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 session.totalAssets += assets.length;
 
                 if (assets.length > 0) {
-                    indb.addMultipleAssets(db, assets).then(() => {
+                    indb.addMultipleAssets(db, assets).then((data) => {
                         // console.log(`(background) Added ${assets.length} assets to the database.`);
+                        if (data.duplicateCount > maxConsecutiveDuplicates && data.completed == 0) {
+                            console.warn(`(background) Found ${data.duplicateCount} duplicate assets, stopping parsing.`);
+                            session.percentDone = 100;
+                            session.isComplete = true;
+                            sendMessageToContentScript({ command: "STOP_PARSING", data: {} });
+                        }
                     }).catch((error) => {
                         console.error("(background) Error adding assets to the database:", error);
                         // "Duplicate URL" error can be ignored

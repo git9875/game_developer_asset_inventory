@@ -80,6 +80,7 @@ export function addMultipleAssets(db, assets) {
         const transaction = db.transaction([STORE_NAME], "readwrite");
         const store = transaction.objectStore(STORE_NAME);
         let completed = 0;
+        let duplicateCount = 0;
 
         for (const asset of assets) {
             // prevent adding duplicate URLs
@@ -89,9 +90,10 @@ export function addMultipleAssets(db, assets) {
                 if (event.target.result) {
                     // reject(new Error("Duplicate URL: " + asset.url));
                     console.warn("(db) Skipping duplicate URL:", asset.url);
+                    duplicateCount++;
                     completed++;
                     if (completed === assets.length) {
-                        resolve();
+                        resolve({ completed, duplicateCount });
                     }
                     return;
                 }
@@ -101,7 +103,7 @@ export function addMultipleAssets(db, assets) {
                 request.onsuccess = () => {
                     completed++;
                     if (completed === assets.length) {
-                        resolve();
+                        resolve({ completed, duplicateCount });
                     }
                 };
                 request.onerror = (event) => {
@@ -390,3 +392,36 @@ export function deleteAssetsForStore(db, assetStoreKey) {
     });
 }
 */
+
+
+// ------------- CRUD operations for individual assets (not currently used, but may be useful for future features like editing asset details) -------------
+// Create handled by functions: addAsset() and addMultipleAssets()
+export function updateAsset(db, asset) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], "readwrite");
+        const store = transaction.objectStore(STORE_NAME);
+        asset['assetStoreKey'] = asset.assetStore.replace(/\s+/g, '_');
+        const request = store.put(asset);
+
+        request.onsuccess = () => {
+            resolve();
+        };
+        request.onerror = (event) => {
+            reject(event.target.error);
+        };
+    });
+}
+
+export function deleteAsset(db, assetId) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], "readwrite");
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.delete(assetId);
+        request.onsuccess = () => {
+            resolve();
+        };
+        request.onerror = (event) => {
+            reject(event.target.error);
+        };
+    });
+}
