@@ -1,7 +1,7 @@
 {
   "name": "GDAI Test Extension",
   "manifest_version": 3,
-  "version": "1.0.7",
+  "version": "1.0.8",
 
   "description": "This is a test extension for the official Game Developer Assets Inventory browser extension. Validates HTML DOM queries and API requests for supported game developer stores.",
 

@@ -1,7 +1,7 @@
 {
   "name": "Game Developer Assets Inventory",
   "manifest_version": 3,
-  "version": "1.0.7",
+  "version": "1.0.8",
 
   "description": "Extracts basic product item data from a user's order history in game developer stores to view and export to their local storage.",
 
