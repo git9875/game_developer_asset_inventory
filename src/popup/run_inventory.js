@@ -155,6 +155,7 @@ const availablePages = [
     { label:"GameDev Market", url:"https://www.gamedevmarket.net/user/orders" },
     { label:"Godot Marketplace", url:"https://godotmarketplace.com/my-account/orders/" },
     { label:"Gumroad", url:"https://gumroad.com/library" },
+    { label:"Itch.io", url:"https://itch.io/my-collections" },
     { label:"Kitbash3D", url:"https://cargo-app.kitbash3d.com/account/my-assets" },
     { label:"Leartes Studio", url:"https://cosmos.leartesstudios.com/inventory" },
     { label:"Ovani Sound", url:"https://ovanisound.com/account" },

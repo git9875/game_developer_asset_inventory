@@ -61,6 +61,7 @@ These are the game developer asset sites for which you can import your order/ass
 - [GameDev Market](https://www.gamedevmarket.net)
 - [Godot Marketplace](https://godotmarketplace.com)
 - [Gumroad](https://gumroad.com)
+- [Itch.io](https://itch.io)
 - [KitBash3d](https://cargo-app.kitbash3d.com)
 - [Leartes Studios](https://cosmos.leartesstudios.com)
 - [Ovani Sound](https://ovanisound.com)

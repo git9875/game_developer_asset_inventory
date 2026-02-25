@@ -15,7 +15,7 @@ let isMultiPage = false;
 
 
 // keep this list in sync with popup/run_inventory.js
-const storeNames = [ "3D Shards", "CGTrader", "Daz3D", "Fab Quixel Megascans", "Fab Unreal", "GameDev Market", "Godot Marketplace", "Gumroad", "KitBash3d", "Leartes Studios", "Ovani Sound", "RenderHub", "Blender", "Synty", "TurboSquid", "Unity" ];
+const storeNames = [ "3D Shards", "CGTrader", "Daz3D", "Fab Quixel Megascans", "Fab Unreal", "GameDev Market", "Godot Marketplace", "Gumroad", "Itch.io", "KitBash3d", "Leartes Studios", "Ovani Sound", "RenderHub", "Blender", "Synty", "TurboSquid", "Unity" ];
 
 
 function applyFilter() {
@@ -137,7 +137,7 @@ document.getElementById('delete-all-tests-btn').addEventListener('click', async 
     const confirmation = confirm("Are you sure you want to delete ALL test records from the database? This action cannot be undone.");
     
     if (confirmation) {
-        await indb.deleteAllTests(db);
+        await indb.clearTests(db);
         currentData = [];
         filteredData = [];
         currentPage = 1;

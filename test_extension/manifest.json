@@ -44,6 +44,10 @@
       "js": ["content_scripts/gumroad.js"]
     },
     {
+      "matches": ["https://itch.io/my-collections*"],
+      "js": ["content_scripts/itchio.js"]
+    },
+    {
       "matches": ["https://cargo-app.kitbash3d.com/account/my-assets*"],
       "js": ["content_scripts/kitbash3d.js"]
     },
