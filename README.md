@@ -103,9 +103,13 @@ This extension gathers data from the **Fab Quixel Megascans** store page, whethe
 ## DB Viewer
 To open the viewer page so you can view and filter your assets, click on the popup button labeled "DB Viewer", and it will open a new tab. You'll see a table of your game assets. Above the table is the filter form, and below the table are the pagination links. You may have to refresh this page to show newly imported items. They will be displayed in the order that they were first imported, so stuff imported later may appear in other pages.
 
-The table includes the image preview, the title (along with category and tags if available), publisher, order ID, purchase date, the store it was imported from, and the URL (View link) to open the product details page. The extension tries to get only these details, but some stores don't make this information easily available without having to parse through many pages. So, some details (like Publisher, Order ID, Purchase Date) may not be available depending on the store.
+The table includes the image preview, the title (links to open the product details page; category and tags will show if available), publisher, order ID, purchase date, the store it was imported from, and Edit/Delete buttons. The extension tries to get only these details, but some stores don't make this information easily available without having to parse through many pages. So, some details (like Publisher, Order ID, Purchase Date) may not be available depending on the store.
+
+Clicking an "Edit" button or "Add Asset" button will open a dialog to enter asset details.
 
 You can quickly filter the table of items by selecting the store, tag, or category. You can further filter items by entering text in the search text box. For quick searches, entering text will filter the existing cache but it won't get other pages. If you click Enter (return) key, then it will do a more extensive search. This search can be filtered/limited to the store dropdown selection, but it won't be filtered by the tag or category selections. The tag and category filters will not be limited by the store dropdown selection, because they are independent filters. Why aren't these extra filters more integrated? It's because more filters increase the complexity and more database filtering functions. That's more code to maintain and probably it won't get much use anyway.
+
+
 
 ![DB Viewer](screenshots/dbviewer.png)
 

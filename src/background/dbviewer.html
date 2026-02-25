@@ -9,9 +9,10 @@
 <body>
     <div class="container">
         <button id="open-exporter-dialog-btn">Open Exporter</button>
+        <button id="open-edit-dialog-btn">Add Asset</button>
         <h1>Game Asset Viewer</h1>
         <p id="backup-notice">Consider exporting your data for backup. If you uninstall the extension, your data will be lost. You could also re-import it from the game asset stores too.</p>
-        <div id="error" class="error" style="display: none;"></div>
+        <div id="error" class="error"></div>
         
         <div class="controls">
             <div class="control-group">
@@ -56,7 +57,7 @@
                     <th>Order ID</th>
                     <th>Purchase Date</th>
                     <th>Store</th>
-                    <th>URL</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -100,6 +101,56 @@
                 </div>
                 <p id="export-info"></p>
                 <div id="export-btns-wrapper"></div>
+            </form>
+        </dialog>
+
+        <dialog id="edit-dialog">
+            <button id="close-edit-dialog-btn">x</button>
+            <form id="edit-form">
+                <h2>Edit Asset</h2>
+                <div class="edit-field">
+                    <label for="edit-title">Title:</label>
+                    <input type="text" id="edit-title" name="title" required>
+                </div>
+                <div class="edit-field">
+                    <label for="edit-url">URL:</label>
+                    <input type="text" id="edit-url" name="url" required>
+                </div>
+                <div class="edit-field">
+                    <label for="edit-thumbnail">Image URL:</label>
+                    <input type="text" id="edit-thumbnail" name="thumbnail" placeholder="Image URL" required>
+                </div>
+                <div class="edit-field">
+                    <label for="edit-assetStore">Asset Store:</label>
+                    <select id="edit-assetStore" name="assetStore">
+                        <option value="">-- Select Store --</option>
+                    </select>
+                </div>
+                <div class="edit-field">
+                    <label for="edit-category">Category:</label>
+                    <input type="text" id="edit-category" name="category">
+                </div>
+                <div class="edit-field">
+                    <label for="edit-tags">Tags:</label>
+                    <input type="text" id="edit-tags" name="tags" placeholder="Comma separated">
+                </div>
+                <div class="edit-field">
+                    <label for="edit-publisher">Publisher:</label>
+                    <input type="text" id="edit-publisher" name="publisher">
+                </div>
+                <div class="edit-field">
+                    <label for="edit-orderId">Order ID:</label>
+                    <input type="text" id="edit-orderId" name="orderId">
+                </div>
+                <div class="edit-field">
+                    <label for="edit-purchaseDate">Purchase Date:</label>
+                    <input type="date" id="edit-purchaseDate" name="purchaseDate">
+                </div>
+                <div id="edit-dialog-buttons">
+                    <button type="submit" id="save-edit-btn">Save</button>
+                    <button type="button" id="close-edit-dialog-btn2">Close</button>
+                </div>
+                <div id="edit-error" class="error"></div>
             </form>
         </dialog>
     </div>

@@ -20,7 +20,7 @@ let isMultiPage = false;
 
 
 // keep this list in sync with popup/run_inventory.js
-const storeNames = [ "3D Shards", "CGTrader", "Daz3D", "Fab Quixel Megascans", "Fab Unreal", 'GameDev Market', 'Godot Marketplace', "Gumroad", "KitBash3d", "Leartes Studios", "Ovani Sound", "RenderHub", "Blender", "Synty", "TurboSquid", "Unity" ];
+const storeNames = [ "3D Shards", "CGTrader", "Daz3D", "Fab Quixel Megascans", "Fab Unreal", 'GameDev Market', 'Godot Marketplace', "Gumroad", "Itch.io", "KitBash3d", "Leartes Studios", "Ovani Sound", "RenderHub", "Blender", "Synty", "TurboSquid", "Unity" ];
 
 
 function applyFilter() {
@@ -45,15 +45,29 @@ function renderTable() {
     tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.imgUrl ? `<img src="${item.imgUrl}" loading="lazy" alt="${item.title || 'Asset'}">` : 'N/A'}</td>
-            <td><b>${escapeHtml(item.title || 'N/A')}</b><br />${escapeHtml(item.category)}<br />${escapeHtml(item.tags ? item.tags.join(', ') : '')}</td>
+            <td><b><a href="${item.url}" target="game_asset_item_view">${escapeHtml(item.title || 'N/A')}</a></b><br />${escapeHtml(item.category)}<br />${escapeHtml(item.tags ? item.tags.join(', ') : '')}</td>
             <td>${escapeHtml(item.publisher || 'N/A')}</td>
             <td>${escapeHtml(item.orderId || 'N/A')}</td>
             <td>${escapeHtml(item.purchaseDate || 'N/A')}</td>
             <td>${escapeHtml(item.assetStore || 'N/A')}</td>
-            <td><a href="${item.url}" target="game_asset_item_view">View</a></td>
+            <td><button class="edit-btn" data-id="${item.id}" aria-label="Edit" title="Edit">&#x270E;</button><br /><button class="delete-btn" data-id="${item.id}" aria-label="Delete" title="Delete">&#x2718;</button></td>
         </tr>
     `).join('');
+
+    const btns = document.querySelectorAll('.edit-btn');
+    btns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentAssetId = parseInt(e.target.getAttribute('data-id'));
+            openEditDialog(currentAssetId);
+        });
+    });
+
+    const deleteBtns = document.querySelectorAll('.delete-btn');
+    deleteBtns.forEach(btn => {
+        btn.addEventListener('click', deleteAsset);
+    });
 }
+
 
 function renderPagination() {
     const pagination = document.getElementById('pagination');
@@ -120,6 +134,10 @@ function showError(message) {
     errorDiv.textContent = message;
     errorDiv.style.display = 'block';
 }
+function hideError() {
+    const errorDiv = document.getElementById('error');
+    errorDiv.style.display = 'none';
+}
 
 
 
@@ -157,6 +175,7 @@ const exporterSplitSelect = document.getElementById('exporter-rows-split-select'
 exporterSplitSelect.value = "100000000"; // default to "No Split" so that the listener is triggered on change and perform calculations
 exporterSplitSelect.addEventListener('change', exportSplitRowsSelect);
 document.getElementById('export-all-btn').addEventListener('click', () => exportFile(0));
+
 
 
 async function handleStoreFilterChange() {
@@ -224,12 +243,19 @@ async function handleInitialLoadResponse() {
     // console.log("(viewer handleInitialLoadResponse) Received data:", data);
     const storeSelect = document.getElementById('store-select');
     storeSelect.innerHTML = '<option value="">All Stores</option>';
+    const editAssetStoreSelect = document.getElementById('edit-assetStore');
+    editAssetStoreSelect.innerHTML = '<option value="">-- Select Store --</option>';
 
     for (const storeName of storeNames) {
         const option = document.createElement('option');
         option.value = storeName;
         option.textContent = storeName;
         storeSelect.appendChild(option);
+
+        const editOption = document.createElement('option');
+        editOption.value = storeName;
+        editOption.textContent = storeName;
+        editAssetStoreSelect.appendChild(editOption);
     }
 
     loadTagsAndCategories();
@@ -443,4 +469,153 @@ async function exportFile(fileIndex) {
         const filename = `${fileBaseName}.txt`;
         text.download(textData, filename);
     }
+}
+
+
+// ------------------------------- Add, Edit, Delete button event listeners -------------------------------
+let currentAssetId = null; // to track which asset is being edited
+
+// Open the modal dialog when the button is clicked
+const editDialog = document.getElementById('edit-dialog');
+document.getElementById('open-edit-dialog-btn').addEventListener('click', () => {
+    // console.log('Opening edit dialog');
+    currentAssetId = null; // reset current asset id when adding new asset
+    resetEditDialog(); // clear previous values
+    editDialog.showModal();
+});
+
+document.getElementById('close-edit-dialog-btn').addEventListener('click', () => {
+    editDialog.close();
+});
+document.getElementById('close-edit-dialog-btn2').addEventListener('click', () => {
+    editDialog.close();
+});
+
+
+document.getElementById('save-edit-btn').addEventListener('click', async (e) => {
+    hideEditError();
+    const title = document.getElementById('edit-title').value;
+    const url = document.getElementById('edit-url').value;
+    const imgUrl = document.getElementById('edit-thumbnail').value;
+    const publisher = document.getElementById('edit-publisher').value;
+    const orderId = document.getElementById('edit-orderId').value;
+    const purchaseDate = document.getElementById('edit-purchaseDate').value;
+    const assetStore = document.getElementById('edit-assetStore').value;
+    const category = document.getElementById('edit-category').value;
+    const tags = document.getElementById('edit-tags').value;
+
+    if (!title || !assetStore || !url) {
+        showEditError('Please fill in all required fields.');
+        e.preventDefault();
+        return;
+    }
+
+    const asset = {
+        url: url,
+        imgUrl: imgUrl ? imgUrl : null,
+        title: title,
+        publisher: publisher ? publisher : null,
+        orderId: orderId ? orderId : null,
+        purchaseDate: purchaseDate ? purchaseDate : null,
+        assetStore: assetStore,
+        category: category ? category : null,
+        tags: tags ? tags.split(',').map(tag => tag.trim()) : null,
+    };
+    if (currentAssetId) {
+        asset.id = currentAssetId;
+    }
+
+    try {
+        if (currentAssetId) {
+            await indb.updateAsset(db, asset);
+        } else {
+            await indb.addAsset(db, asset);
+        }
+
+        editDialog.close();
+        // loadData();
+    } catch (error) {
+        showEditError('Failed to save asset: ' + error.message);
+        e.preventDefault();
+    }
+});
+
+// from renderTable function, delegate edit and delete button clicks
+async function deleteAsset(e) {
+    hideError();
+    if (!confirm('Are you sure you want to delete this asset?')) {
+        return;
+    }
+
+    const id = e.target.getAttribute('data-id');
+    try {
+        await indb.deleteAsset(db, parseInt(id));
+
+        // fade the row out before removing it from the DOM
+        const row = e.target.closest('tr');
+        row.style.transition = 'opacity 0.5s';
+        row.style.opacity = 0;
+        setTimeout(() => {
+            row.remove();
+        }, 500);
+
+        // remove the asset from currentData and re-render the table to update pagination and filters
+        currentData = currentData.filter(asset => asset.id !== parseInt(id));
+        filteredData = filteredData.filter(asset => asset.id !== parseInt(id));
+        setPrePagination(currentData.length);
+        // renderTable();
+        renderPagination();
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+// from renderTable function, when edit button is clicked, open the edit dialog and populate it with the asset data
+async function openEditDialog(assetId) {
+    hideError();
+    const asset = currentData.find(a => a.id === parseInt(assetId));
+    if (!asset) {
+        showError('Asset not found');
+        return;
+    }
+
+    resetEditDialog(); // clear previous values
+    currentAssetId = assetId; // set current asset id to the one being edited
+
+    document.getElementById('edit-title').value = escapeHtml(asset.title) || '';
+    document.getElementById('edit-url').value = escapeHtml(asset.url) || '';
+    document.getElementById('edit-thumbnail').value = escapeHtml(asset.imgUrl) || '';
+    document.getElementById('edit-category').value = escapeHtml(asset.category) || '';
+    document.getElementById('edit-tags').value = asset.tags ? asset.tags.map(tag => escapeHtml(tag)).join(', ') : '';
+    document.getElementById('edit-publisher').value = escapeHtml(asset.publisher) || '';
+    document.getElementById('edit-orderId').value = escapeHtml(asset.orderId) || '';
+    document.getElementById('edit-purchaseDate').value = escapeHtml(asset.purchaseDate) || '';
+    document.getElementById('edit-assetStore').value = escapeHtml(asset.assetStore) || '';
+    editDialog.showModal();
+}
+
+function resetEditDialog() {
+    document.getElementById('edit-title').value = '';
+    document.getElementById('edit-url').value = '';
+    document.getElementById('edit-thumbnail').value = '';
+    document.getElementById('edit-category').value = '';
+    document.getElementById('edit-tags').value = '';
+    document.getElementById('edit-publisher').value = '';
+    document.getElementById('edit-orderId').value = '';
+    document.getElementById('edit-purchaseDate').value = '';
+    document.getElementById('edit-assetStore').value = '';
+    document.getElementById('edit-error').textContent = '';
+    hideEditError();
+    currentAssetId = null;
+}
+
+function showEditError(message) {
+    const errorDiv = document.getElementById('edit-error');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+}
+
+function hideEditError() {
+    const errorDiv = document.getElementById('edit-error');
+    errorDiv.style.display = 'none';
 }
